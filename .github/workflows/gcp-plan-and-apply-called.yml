@@ -1,0 +1,195 @@
+name: Plan and Apply Called Workflow
+
+on:
+  workflow_call:
+    inputs:
+      checkout_ref:
+        required: true
+        type: string
+      github_env:
+        required: true
+        type: string
+      terraform_version:
+        required: true
+        type: string
+      tf_plan_args:
+        required: true
+        type: string
+      tf_state_bucket:
+        required: true
+        type: string
+      tf_workspace:
+        required: true
+        type: string
+      working_dir:
+        required: true
+        type: string
+
+    secrets:
+      gpg_passphrase:
+        required: true
+      service_account_key:
+        required: true
+      ssh_key:
+        required: true
+      tf_plan_secret_args:
+        required: false
+
+env:
+  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
+jobs:
+  plan:
+    name: "Terraform: plan"
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_dir }}
+
+    steps:
+      # GitHub - Checkout
+      # https://github.com/marketplace/actions/checkout
+
+      - name: GitHub Checkout
+        uses: actions/checkout@v3.0.2
+        with:
+          ref: ${{ inputs.checkout_ref }}
+
+      # Google Cloud Platform - Authenticate to Google Cloud
+      # https://github.com/marketplace/actions/authenticate-to-google-cloud
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0.8.1
+        with:
+          credentials_json: ${{ secrets.service_account_key }}
+
+      # GitHub - Setup SSH for Module Access
+
+      - name: Setup SSH for Module Access
+        run: |
+          ssh-agent -a $SSH_AUTH_SOCK
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      # HashiCorp - Setup Terraform
+      # https://github.com/marketplace/actions/hashicorp-setup-terraform
+
+      - name: Setup Terraform Action
+        uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform Initialize - https://www.terraform.io/docs/commands/init.html
+        run: terraform init -backend-config="bucket=${{ inputs.tf_state_bucket }}"
+
+      - name: Terraform Workspace - https://www.terraform.io/docs/commands/workspace/index.html
+        run: >-
+          terraform workspace select ${{ inputs.tf_workspace }} ||
+          terraform workspace new ${{ inputs.tf_workspace }}
+
+      - name: Terraform Format - https://www.terraform.io/docs/commands/fmt.html
+        run: terraform fmt -check -diff
+
+      - name: Terraform Validate - https://www.terraform.io/docs/commands/validate.html
+        run: terraform validate
+
+      - name: Terraform Plan - https://www.terraform.io/docs/commands/plan.html
+        id: plan
+        run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.tf_plan_args}} ${{ secrets.tf_plan_secret_args }}
+        continue-on-error: true
+
+      - name: Check for Plan Failure
+        if: steps.plan.outputs.exitcode == 1
+        run: exit 1
+
+      # Encrypt - Terraform plan.out
+
+      - name: Encrypt Terraform "plan.out"
+        if: steps.plan.outputs.exitcode == 2
+        run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --symmetric --cipher-algo AES256 plan.out
+
+      # Github - Upload Artifact
+      # https://github.com/marketplace/actions/upload-a-build-artifact
+
+      - name: Upload Encrypted Artifact
+        if: steps.plan.outputs.exitcode == 2
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.tf_workspace }}-encrypted-plan
+          path: ${{ inputs.working_dir }}/plan.out.gpg
+
+    outputs:
+      planExitcode: ${{ steps.plan.outputs.exitcode }}
+
+  apply:
+    name: "Terraform: apply"
+    needs: plan
+    if: needs.plan.outputs.planExitcode == 2
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.github_env }}
+
+    # Use the Bash shell
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ inputs.working_dir }}
+
+    steps:
+      # GitHub - Checkout
+      # https://github.com/marketplace/actions/checkout
+
+      - name: GitHub Checkout
+        uses: actions/checkout@v3.0.2
+        with:
+          ref: ${{ inputs.checkout_ref }}
+
+      # Google Cloud Platform - Authenticate to Google Cloud
+      # https://github.com/marketplace/actions/authenticate-to-google-cloud
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0.8.1
+        with:
+          credentials_json: ${{ secrets.service_account_key }}
+
+      # GitHub - Setup SSH for Module Access
+
+      - name: Setup SSH for Module Access
+        run: |
+          ssh-agent -a $SSH_AUTH_SOCK
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      # Github - Download Artifact
+      # https://github.com/marketplace/actions/download-a-build-artifact
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ inputs.tf_workspace }}-encrypted-plan
+          path: ${{ inputs.working_dir }}
+
+      # Decrypt - Terraform plan.out
+
+      - name: Decrypt Terraform "plan.out"
+        run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --output plan.out plan.out.gpg
+
+      # HashiCorp - Setup Terraform
+      # https://github.com/marketplace/actions/hashicorp-setup-terraform
+
+      - name: Setup Terraform Action
+        uses: hashicorp/setup-terraform@v2.0.0
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform Initialize - https://www.terraform.io/docs/commands/init.html
+        run: terraform init -backend-config="bucket=${{ inputs.tf_state_bucket }}"
+
+      - name: Terraform Workspace - https://www.terraform.io/docs/commands/workspace/index.html
+        run: terraform workspace select ${{ inputs.tf_workspace }}
+
+      - name: Terraform Apply - https://www.terraform.io/docs/commands/apply.html
+        run: terraform apply plan.out
