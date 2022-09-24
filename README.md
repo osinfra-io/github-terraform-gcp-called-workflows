@@ -49,7 +49,7 @@ jobs:
       terraform_version: 1.3.0
       tf_plan_args: -var-file=tfvars/us-east1-dev.tfvars
       tf_state_bucket: my-non-prod-state-bucket
-      tf_workspace: my-non-prod-workspace
+      tf_workspace: my-non-prod-workspace-us-east1
       working_dir: regional
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
@@ -66,7 +66,7 @@ jobs:
       terraform_version: 1.3.0
       tf_plan_args: -var-file=tfvars/us-east4-dev.tfvars
       tf_state_bucket: my-non-prod-state-bucket
-      tf_workspace: my-non-prod-workspace
+      tf_workspace: my-non-prod-workspace-us-east4
       working_dir: regional
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
