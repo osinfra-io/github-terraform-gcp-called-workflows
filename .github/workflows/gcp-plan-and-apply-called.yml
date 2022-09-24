@@ -115,7 +115,7 @@ jobs:
 
       - name: Upload Encrypted Artifact
         if: steps.plan.outputs.exitcode == 2
-        uses: actions/upload-artifact@v3.0.0
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: ${{ inputs.tf_workspace }}-encrypted-plan
           path: ${{ inputs.working_dir }}/plan.out.gpg
