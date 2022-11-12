@@ -9,6 +9,9 @@ on:
       github_env:
         required: true
         type: string
+      service_account:
+        required: true
+        type: string
       terraform_version:
         required: true
         type: string
@@ -24,11 +27,12 @@ on:
       working_dir:
         required: true
         type: string
+      workload_identity_provider:
+        required: true
+        type: string
 
     secrets:
       gpg_passphrase:
-        required: true
-      service_account_key:
         required: true
       ssh_key:
         required: true
@@ -45,7 +49,14 @@ jobs:
 
     defaults:
       run:
+        shell: bash
         working-directory: ${{ inputs.working_dir }}
+
+    permissions:
+      # This is required for the Github-Actions to be able to check out the repository.
+      contents: read
+      # This is required to be able to request an OpenID Connect JWT Token.
+      id-token: write
 
     steps:
       # GitHub - Checkout
@@ -62,7 +73,9 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1.0.0
         with:
-          credentials_json: ${{ secrets.service_account_key }}
+          create_credentials_file: true
+          service_account: ${{ inputs.service_account }}
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
 
       # GitHub - Setup SSH for Module Access
 
@@ -98,11 +111,6 @@ jobs:
       - name: Terraform Plan - https://www.terraform.io/docs/commands/plan.html
         id: plan
         run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.tf_plan_args}} ${{ secrets.tf_plan_secret_args }}
-        continue-on-error: true
-
-      - name: Check for Plan Failure
-        if: steps.plan.outputs.exitcode == 1
-        run: exit 1
 
       # Encrypt - Terraform plan.out
 
@@ -115,7 +123,7 @@ jobs:
 
       - name: Upload Encrypted Artifact
         if: steps.plan.outputs.exitcode == 2
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v3.0.1
         with:
           name: ${{ inputs.tf_workspace }}-encrypted-plan
           path: ${{ inputs.working_dir }}/plan.out.gpg
@@ -130,12 +138,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.github_env }}
-
-    # Use the Bash shell
-    defaults:
-      run:
-        shell: bash
-        working-directory: ${{ inputs.working_dir }}
 
     steps:
       # GitHub - Checkout
@@ -152,7 +154,9 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1.0.0
         with:
-          credentials_json: ${{ secrets.service_account_key }}
+          create_credentials_file: true
+          service_account: ${{ inputs.service_account }}
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
 
       # GitHub - Setup SSH for Module Access
 

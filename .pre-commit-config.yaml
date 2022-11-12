@@ -6,4 +6,11 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-symlinks
-#      - id: no-commit-to-branch
+  #      - id: no-commit-to-branch
+
+  - repo: https://github.com/bridgecrewio/checkov.git
+    rev: 2.2.44
+    hooks:
+      - id: checkov
+        verbose: true
+        args: [--soft-fail]
