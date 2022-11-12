@@ -123,7 +123,7 @@ jobs:
 
       - name: Upload Encrypted Artifact
         if: steps.plan.outputs.exitcode == 2
-        uses: actions/upload-artifact@v3.0.1
+        uses: actions/upload-artifact@v3.1.1
         with:
           name: ${{ inputs.tf_workspace }}-encrypted-plan
           path: ${{ inputs.working_dir }}/plan.out.gpg
@@ -171,7 +171,7 @@ jobs:
       # https://github.com/marketplace/actions/download-a-build-artifact
 
       - name: Download Artifact
-        uses: actions/download-artifact@v3.0.1
+        uses: actions/download-artifact@v3.1.1
         with:
           name: ${{ inputs.tf_workspace }}-encrypted-plan
           path: ${{ inputs.working_dir }}
