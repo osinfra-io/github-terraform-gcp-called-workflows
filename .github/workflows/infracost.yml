@@ -3,8 +3,8 @@ name: Infracost Called Workflow
 on:
   workflow_call:
     secrets:
-      github_token:
-        required: true
+      # git_token:
+      #   required: true
       infracost_api_key:
         required: true
       ssh_key:
@@ -73,6 +73,6 @@ jobs:
         run: |
           infracost comment github --path=/tmp/infracost.json \
                                    --repo=${{ github.event.repository.full_name }} \
-                                   --github-token=${{ secrets.github_token }} \
+                                   --github-token=${{ secrets.GITHUB_TOKEN }} \
                                    --pull-request=${{ github.event.pull_request.number }} \
                                    --behavior=update
