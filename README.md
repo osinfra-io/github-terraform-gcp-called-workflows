@@ -1,5 +1,13 @@
 # <img align="left" width="45" height="45" src="https://user-images.githubusercontent.com/1610100/201473670-e0e6bdeb-742f-4be1-a47a-3506309620a3.png"> Terraform Google Cloud Platform Called Workflows
 
+**[GitHub Actions](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions):**
+
+[![Dependabot](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/dependabot.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/dependabot.yml)
+
+**[Bridgecrew](https://www.bridgecrew.cloud/projects?types=Passed&repository=osinfra-io%2Fgithub-terraform-gcp-called-workflows&branch=main):**
+
+[![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/osinfra-io/github-terraform-gcp-called-workflows/general)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=osinfra-io%2Fgithub-terraform-gcp-called-workflows&benchmark=INFRASTRUCTURE+SECURITY)
+
 Reusing workflows avoids duplication. This makes workflows easier to maintain and allows you to create new workflows
 more quickly by building on the work of others, just as you do with actions.
 
@@ -11,7 +19,12 @@ be centrally maintained.
 
 Rather than copying and pasting from one workflow to another, you can make workflows [reusable](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows). You and anyone with access to the reusable workflow can then call the reusable workflow from another workflow.
 
-### Example Usage
+### Workflows
+
+- [gcp-plan-and-apply.yml](.github/workflows/gcp-plan-and-apply.yml)
+- [infracost.yml](.github/workflows/infracost.yml)
+
+### Example Google Cloud Platform Usage
 
 ```yaml
 name: Development
@@ -37,7 +50,7 @@ jobs:
       workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.RO_SSH_PRIV_KEY }}
+      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
       tf_plan_secret_args: -var="token=${{ secrets.TOKEN }}"
 
   us_east1_infra:
@@ -56,7 +69,7 @@ jobs:
       workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.RO_SSH_PRIV_KEY }}
+      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
 
    us_east4_infra:
     name: "Infra: us-east4"
@@ -74,5 +87,23 @@ jobs:
       workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.RO_SSH_PRIV_KEY }}
+      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
+```
+
+### Example Infracost Usage
+
+```yaml
+name: Infracost
+
+on:
+  pull_request:
+
+jobs:
+  infracost:
+    name: Infracost
+    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/infracost.yml@v0.0.0
+    secrets:
+      git_token: ${{ secrets.GITHUB_TOKEN }}
+      infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
+      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
 ```

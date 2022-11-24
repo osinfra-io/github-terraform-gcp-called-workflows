@@ -1,0 +1,81 @@
+name: Infracost Called Workflow
+
+on:
+  workflow_call:
+    secrets:
+      infracost_api_key:
+        required: true
+
+      # Uncomment if you have private modules
+      # ssh_key:
+      #   required: true
+
+# If you use private modules you'll need this env variable to use
+# the same ssh-agent socket value across all jobs & steps.
+# env:
+#  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
+jobs:
+  infracost:
+    name: Multi-project
+    runs-on: ubuntu-latest
+    env:
+      INFRACOST_ENABLE_CLOUD: true
+
+    steps:
+      # GitHub - Setup SSH for Module Access
+      # Uncomment if you have private modules
+
+      # - name: Setup SSH for Module Access
+      #   run: |
+      #     ssh-agent -a $SSH_AUTH_SOCK
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
+      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      # GitHub - Checkout
+      # https://github.com/marketplace/actions/checkout
+
+      # Checkout the branch you want Infracost to compare costs against.
+      - name: Run step checkout main branch
+        uses: actions/checkout@v3.1.0
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      # Infracost Actions
+      # https://github.com/marketplace/actions/infracost-actions
+
+      - name: Run step infracost-actions
+        uses: infracost/actions/setup@v2.0.0
+        with:
+          api-key: ${{ secrets.infracost_api_key }}
+
+      # Generate Infracost JSON file as the baseline.
+      - name: Run step infracost breakdown
+        run: |
+          infracost breakdown --config-file=infracost.yml \
+                              --format=json \
+                              --out-file=/tmp/infracost-base.json
+
+      # Checkout the current PR branch so we can create a diff.
+      - name: Run step checkout PR branch
+        uses: actions/checkout@v3.1.0
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      # Generate an Infracost diff and save it to a JSON file.
+      - name: Run step infracost diff
+        run: |
+          infracost diff --config-file=infracost.yml \
+                         --format=json \
+                         --compare-to=/tmp/infracost-base.json \
+                         --out-file=/tmp/infracost.json
+
+      # Posts a comment to the PR using the 'update' behavior.
+      - name: Run step infracost comment
+        run: |
+          infracost comment github --path=/tmp/infracost.json \
+                                   --repo=${{ github.event.repository.full_name }} \
+                                   --github-token=${{ secrets.GITHUB_TOKEN }} \
+                                   --pull-request=${{ github.event.pull_request.number }} \
+                                   --behavior=update
