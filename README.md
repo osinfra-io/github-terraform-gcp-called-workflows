@@ -2,7 +2,7 @@
 
 **[GitHub Actions](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions):**
 
-[![Dependabot](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/dependabot.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/dependabot.yml)
+[![Dependabot](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml)
 
 **[Bridgecrew](https://www.bridgecrew.cloud/projects?types=Passed&repository=osinfra-io%2Fgithub-terraform-gcp-called-workflows&branch=main):**
 

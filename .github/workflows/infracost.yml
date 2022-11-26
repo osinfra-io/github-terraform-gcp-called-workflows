@@ -18,6 +18,7 @@ on:
 jobs:
   infracost:
     name: Multi-project
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     env:
       INFRACOST_ENABLE_CLOUD: true
