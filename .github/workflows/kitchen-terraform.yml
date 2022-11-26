@@ -14,6 +14,14 @@ jobs:
   kitchen-terraform:
     name: Kitchen-Terraform
     runs-on: ubuntu-latest
+    permissions:
+      # This is required for the Github-Actions to be able to check out the repository.
+
+      contents: read
+
+      # This is required to be able to request an OpenID Connect JWT Token.
+
+      id-token: write
 
     steps:
       # GitHub - Checkout
