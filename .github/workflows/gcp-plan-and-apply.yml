@@ -57,11 +57,9 @@ jobs:
         working-directory: ${{ inputs.working_dir }}
 
     permissions:
-      # This is required for the Github-Actions to be able to check out the repository.
-
-      contents: read
-
-      # This is required to be able to request an OpenID Connect JWT Token.
+      # The job or workflow run requires a permissions setting with id-token: write.
+      # You won't be able to request the OIDC JWT ID token if the permissions setting
+      # for id-token is set to read or none.
 
       id-token: write
 
