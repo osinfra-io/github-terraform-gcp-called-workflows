@@ -16,13 +16,16 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+
       # The job or workflow run requires a permissions setting with id-token: write.
       # You won't be able to request the OIDC JWT ID token if the permissions setting
       # for id-token is set to read or none.
 
+      contents: read
       id-token: write
 
     steps:
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
