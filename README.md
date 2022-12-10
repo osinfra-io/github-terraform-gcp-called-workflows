@@ -27,67 +27,32 @@ Rather than copying and pasting from one workflow to another, you can make workf
 ### Example Google Cloud Platform Usage
 
 ```yaml
-name: Development
+name: Sandbox Update
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - synchronize
+    paths-ignore:
+      - "**.md"
+  workflow_dispatch:
 
 jobs:
   global_infra:
-    name: "Global"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply-called.yml@v0.0.0
+    name: "Infra: global"
+    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v.0.0.0
     with:
       checkout_ref: ${{ github.ref }}
-      github_env: "Development Infrastructure: Global"
-      service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_version: 1.3.4
-      tf_plan_args: -var-file=tfvars/dev.tfvars
-      tf_state_bucket: nonprod-state-bucket
-      tf_workspace: nonprod-workspace
-      working_dir: global
-      workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
+      github_env: "Sandbox Infrastructure: Global"
+      service_account: actions-service-account@shared-terraform-sb.iam.gserviceaccount.com
+      terraform_version: 1.3.6
+      tf_plan_args: -var-file=tfvars/sb.tfvars
+      tf_state_bucket: shared-terraform-sb-my-state
+      tf_workspace: global-infra-sb
+      working_dir: global/infra
+      workload_identity_provider: projects/999988877766/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
-      tf_plan_secret_args: -var="token=${{ secrets.TOKEN }}"
-
-  us_east1_infra:
-    name: "Infra: us-east1"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply-called.yml@v0.0.0
-    needs: global_infra
-    with:
-      checkout_ref: ${{ github.ref }}
-      github_env: "Development Infrastructure: Regional - us-east1"
-      service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_version: 1.3.4
-      tf_plan_args: -var-file=tfvars/us-east1-dev.tfvars
-      tf_state_bucket: nonprod-state-bucket
-      tf_workspace: nonprod-workspace-us-east1
-      working_dir: regional
-      workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
-    secrets:
-      gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
-
-   us_east4_infra:
-    name: "Infra: us-east4"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply-called.yml@v0.0.0
-    needs: global_infra
-    with:
-      checkout_ref: ${{ github.ref }}
-      github_env: "Development Infrastructure: Regional - us-east4"
-      service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_version: 1.3.4
-      tf_plan_args: -var-file=tfvars/us-east4-dev.tfvars
-      tf_state_bucket: nonprod-state-bucket
-      tf_workspace: nonprod-workspace-us-east4
-      working_dir: regional
-      workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
-    secrets:
-      gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
 ```
 
 ### Example Infracost Usage

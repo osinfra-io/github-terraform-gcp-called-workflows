@@ -61,6 +61,7 @@ jobs:
       # You won't be able to request the OIDC JWT ID token if the permissions setting
       # for id-token is set to read or none.
 
+      contents: read
       id-token: write
 
     steps:
