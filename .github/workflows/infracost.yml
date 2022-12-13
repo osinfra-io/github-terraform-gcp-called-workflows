@@ -39,7 +39,7 @@ jobs:
 
       # Checkout the branch you want Infracost to compare costs against.
       - name: Run step checkout main branch
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v3.2.0
         with:
           ref: ${{ github.event.pull_request.base.ref }}
 
@@ -60,7 +60,7 @@ jobs:
 
       # Checkout the current PR branch so we can create a diff.
       - name: Run step checkout PR branch
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v3.2.0
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
