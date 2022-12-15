@@ -47,6 +47,13 @@ on:
 # env:
 #  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
+permissions:
+  # The job or workflow run requires a permissions setting with id-token: write.
+  # You won't be able to request the OIDC JWT ID token if the permissions setting
+  # for id-token is set to read or none.
+
+  id-token: write
+
 jobs:
   plan:
     name: "Terraform: plan"
@@ -55,14 +62,6 @@ jobs:
     defaults:
       run:
         working-directory: ${{ inputs.working_dir }}
-
-    permissions:
-      # The job or workflow run requires a permissions setting with id-token: write.
-      # You won't be able to request the OIDC JWT ID token if the permissions setting
-      # for id-token is set to read or none.
-
-      contents: read
-      id-token: write
 
     steps:
       # GitHub - Checkout
