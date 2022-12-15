@@ -148,6 +148,10 @@ jobs:
     environment:
       name: ${{ inputs.github_env }}
 
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_dir }}
+
     steps:
 
       # GitHub - Checkout
@@ -185,7 +189,7 @@ jobs:
         uses: actions/download-artifact@v3.0.1
         with:
           name: ${{ inputs.tf_workspace }}-encrypted-plan
-          path: ${{ inputs.working_dir }}
+          #path: ${{ inputs.working_dir }}
 
       # Decrypt - Terraform plan.out
 
