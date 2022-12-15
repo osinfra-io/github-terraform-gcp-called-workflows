@@ -40,18 +40,17 @@ jobs:
     uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply-called.yml@v0.0.0
     with:
       checkout_ref: ${{ github.ref }}
-      github_env: "Development Infrastructure: Global"
+      github_environment: "Development Infrastructure: Global"
       service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_version: 1.3.4
-      tf_plan_args: -var-file=tfvars/dev.tfvars
-      tf_state_bucket: nonprod-state-bucket
-      tf_workspace: nonprod-workspace
-      working_dir: global
+      terraform_plan_args: -var-file=tfvars/dev.tfvars
+      terraform_state_bucket: nonprod-state-bucket
+      terraform_version: 1.3.6
+      terraform_workspace: nonprod-workspace
+      working_directory: global
       workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
-      tf_plan_secret_args: -var="token=${{ secrets.TOKEN }}"
+      terraform_plan_secret_args: -var="token=${{ secrets.TOKEN }}"
 
   us_east1_infra:
     name: "Infra: us-east1"
@@ -59,17 +58,16 @@ jobs:
     needs: global_infra
     with:
       checkout_ref: ${{ github.ref }}
-      github_env: "Development Infrastructure: Regional - us-east1"
+      github_environment: "Development Infrastructure: Regional - us-east1"
       service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_version: 1.3.4
-      tf_plan_args: -var-file=tfvars/us-east1-dev.tfvars
-      tf_state_bucket: nonprod-state-bucket
-      tf_workspace: nonprod-workspace-us-east1
-      working_dir: regional
+      terraform_plan_args: -var-file=tfvars/us-east1-dev.tfvars
+      terraform_state_bucket: nonprod-state-bucket
+      terraform_version: 1.3.6
+      terraform_workspace: nonprod-workspace-us-east1
+      working_directory: regional
       workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
 
    us_east4_infra:
     name: "Infra: us-east4"
@@ -77,17 +75,16 @@ jobs:
     needs: global_infra
     with:
       checkout_ref: ${{ github.ref }}
-      github_env: "Development Infrastructure: Regional - us-east4"
+      github_environment: "Development Infrastructure: Regional - us-east4"
       service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_version: 1.3.4
-      tf_plan_args: -var-file=tfvars/us-east4-dev.tfvars
-      tf_state_bucket: nonprod-state-bucket
-      tf_workspace: nonprod-workspace-us-east4
-      working_dir: regional
+      terraform_version: 1.3.6
+      terraform_plan_args: -var-file=tfvars/us-east4-dev.tfvars
+      terraform_state_bucket: nonprod-state-bucket
+      terraform_workspace: nonprod-workspace-us-east4
+      working_directory: regional
       workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
 ```
 
 ### Example Infracost Usage
@@ -103,7 +100,5 @@ jobs:
     name: Infracost
     uses: osinfra-io/github-terraform-called-workflows/.github/workflows/infracost.yml@v0.0.0
     secrets:
-      git_token: ${{ secrets.GITHUB_TOKEN }}
       infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
-      ssh_key: ${{ secrets.SSH_PRIV_KEY }}
 ```

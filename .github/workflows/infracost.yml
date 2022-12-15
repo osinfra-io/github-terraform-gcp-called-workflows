@@ -38,7 +38,7 @@ jobs:
       # https://github.com/marketplace/actions/checkout
 
       # Checkout the branch you want Infracost to compare costs against.
-      - name: Run step checkout main branch
+      - name: Step checkout main branch
         uses: actions/checkout@v3.2.0
         with:
           ref: ${{ github.event.pull_request.base.ref }}
@@ -46,26 +46,26 @@ jobs:
       # Infracost Actions
       # https://github.com/marketplace/actions/infracost-actions
 
-      - name: Run step infracost-actions
+      - name: Step infracost-actions
         uses: infracost/actions/setup@v2.0.0
         with:
           api-key: ${{ secrets.infracost_api_key }}
 
       # Generate Infracost JSON file as the baseline.
-      - name: Run step infracost breakdown
+      - name: Step infracost breakdown
         run: |
           infracost breakdown --config-file=infracost.yml \
                               --format=json \
                               --out-file=/tmp/infracost-base.json
 
       # Checkout the current PR branch so we can create a diff.
-      - name: Run step checkout PR branch
+      - name: Step checkout PR branch
         uses: actions/checkout@v3.2.0
         with:
           ref: ${{ github.event.pull_request.head.ref }}
 
       # Generate an Infracost diff and save it to a JSON file.
-      - name: Run step infracost diff
+      - name: Step infracost diff
         run: |
           infracost diff --config-file=infracost.yml \
                          --format=json \
@@ -73,7 +73,7 @@ jobs:
                          --out-file=/tmp/infracost.json
 
       # Posts a comment to the PR using the 'update' behavior.
-      - name: Run step infracost comment
+      - name: Step infracost comment
         run: |
           infracost comment github --path=/tmp/infracost.json \
                                    --repo=${{ github.event.repository.full_name }} \
