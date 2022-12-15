@@ -48,6 +48,7 @@ on:
 #  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
 permissions:
+
   # The job or workflow run requires a permissions setting with id-token: write.
   # You won't be able to request the OIDC JWT ID token if the permissions setting
   # for id-token is set to read or none.
@@ -64,6 +65,7 @@ jobs:
         working-directory: ${{ inputs.working_dir }}
 
     steps:
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
@@ -146,6 +148,7 @@ jobs:
       name: ${{ inputs.github_env }}
 
     steps:
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
