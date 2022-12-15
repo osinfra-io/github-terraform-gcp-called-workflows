@@ -188,7 +188,7 @@ jobs:
         uses: actions/download-artifact@v3.0.1
         with:
           name: ${{ inputs.tf_workspace }}-encrypted-plan
-          #path: ${{ inputs.working_dir }}
+          path: ${{ inputs.working_dir }}
 
       # Decrypt - Terraform plan.out
 
