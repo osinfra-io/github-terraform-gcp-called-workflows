@@ -129,7 +129,7 @@ jobs:
 
       - name: Step upload-artifact
         if: steps.plan.outputs.exitcode == 2
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: ${{ inputs.terraform_workspace }}-encrypted-plan
           path: ${{ inputs.working_directory }}/plan.out.gpg
