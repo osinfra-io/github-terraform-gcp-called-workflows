@@ -16,7 +16,7 @@ on:
         required: true
         type: string
       terraform_plan_args:
-        required: true
+        required: false
         type: string
       terraform_state_bucket:
         required: true
