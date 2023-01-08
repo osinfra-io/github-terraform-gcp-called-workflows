@@ -37,7 +37,7 @@ on:
 jobs:
   global_infra:
     name: "Global"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply-called.yml@v0.0.0
+    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
     with:
       checkout_ref: ${{ github.ref }}
       github_environment: "Development Infrastructure: Global"
@@ -54,7 +54,7 @@ jobs:
 
   us_east1_infra:
     name: "Infra: us-east1"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply-called.yml@v0.0.0
+    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
     needs: global_infra
     with:
       checkout_ref: ${{ github.ref }}
@@ -71,7 +71,7 @@ jobs:
 
    us_east4_infra:
     name: "Infra: us-east4"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply-called.yml@v0.0.0
+    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
     needs: global_infra
     with:
       checkout_ref: ${{ github.ref }}
