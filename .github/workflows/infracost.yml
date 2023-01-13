@@ -47,7 +47,7 @@ jobs:
       # https://github.com/marketplace/actions/infracost-actions
 
       - name: Step infracost-actions
-        uses: infracost/actions/setup@v2.0.0
+        uses: infracost/actions/setup@v2.1.0
         with:
           api-key: ${{ secrets.infracost_api_key }}
 
