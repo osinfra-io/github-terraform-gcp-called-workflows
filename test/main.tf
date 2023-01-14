@@ -1,5 +1,5 @@
 module "test" {
-  source = "git@github.com:osinfra-io/terraform-google-project"
+  source = "github.com/osinfra-io/terraform-google-project"
 
   billing_account                 = var.billing_account
   cost_center                     = "x000"

@@ -1,4 +1,4 @@
-name: Sandbox
+name: Tests
 
 on:
   workflow_dispatch:
