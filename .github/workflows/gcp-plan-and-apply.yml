@@ -125,15 +125,20 @@ jobs:
         if: steps.plan.outputs.exitcode == 2
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --symmetric --cipher-algo AES256 plan.out
 
-      # Github - Upload Artifact
-      # https://github.com/marketplace/actions/upload-a-build-artifact
+      # # Github - Upload Artifact
+      # # https://github.com/marketplace/actions/upload-a-build-artifact
 
-      - name: Step upload-artifact
-        if: steps.plan.outputs.exitcode == 2
-        uses: actions/upload-artifact@v3.1.2
+      # - name: Step upload-artifact
+      #   if: steps.plan.outputs.exitcode == 2
+      #   uses: actions/upload-artifact@v3.1.2
+      #   with:
+      #     name: ${{ inputs.terraform_workspace }}-encrypted-plan
+      #     path: ${{ inputs.working_directory }}/plan.out.gpg
+
+      - uses: actions/cache@v3
         with:
-          name: ${{ inputs.terraform_workspace }}-encrypted-plan
           path: ${{ inputs.working_directory }}/plan.out.gpg
+          key: ${{ runner.os }}-${{ hashFiles('**/plan.out.gpg') }}
 
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
@@ -179,14 +184,20 @@ jobs:
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      # Github - Download Artifact
-      # https://github.com/marketplace/actions/download-a-build-artifact
+      # # Github - Download Artifact
+      # # https://github.com/marketplace/actions/download-a-build-artifact
 
-      - name: Step download-artifact
-        uses: actions/download-artifact@v3.0.2
+      # - name: Step download-artifact
+      #   uses: actions/download-artifact@v3.0.2
+      #   with:
+      #     name: ${{ inputs.terraform_workspace }}-encrypted-plan
+      #     path: ${{ inputs.working_directory }}
+
+      - name: Restore cached Primes
+        uses: actions/cache/restore@v3
         with:
-          name: ${{ inputs.terraform_workspace }}-encrypted-plan
           path: ${{ inputs.working_directory }}
+          key: ${{ runner.os }}-${{ hashFiles('**/plan.out.gpg') }}
 
       # Decrypt - Terraform plan.out
 
