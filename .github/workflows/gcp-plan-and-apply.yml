@@ -142,7 +142,9 @@ jobs:
         if: steps.plan.outputs.exitcode == 2
         uses: actions/cache@v3.2.3
         with:
-          path: ${{ inputs.working_directory }}/plan.out.gpg
+          path: |
+           ${{ inputs.working_directory }}/plan.out.gpg
+           .terraform
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
     outputs:
@@ -220,11 +222,11 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Step terraform init
-        run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
+      # - name: Step terraform init
+      #   run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
 
-      - name: Step terraform workspace
-        run: terraform workspace select ${{ inputs.terraform_workspace }}
+      # - name: Step terraform workspace
+      #   run: terraform workspace select ${{ inputs.terraform_workspace }}
 
       - name: Step terraform apply
         run: terraform apply plan.out
