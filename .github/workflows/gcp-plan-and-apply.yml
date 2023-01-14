@@ -135,10 +135,15 @@ jobs:
       #     name: ${{ inputs.terraform_workspace }}-encrypted-plan
       #     path: ${{ inputs.working_directory }}/plan.out.gpg
 
-      - uses: actions/cache@v3
+      # GitHub - Cache
+      # https://github.com/marketplace/actions/cache
+
+      - name: Step cache plan.out.gpg
+        if: steps.plan.outputs.exitcode == 2
+        uses: actions/cache@v3.2.3
         with:
           path: ${{ inputs.working_directory }}/plan.out.gpg
-          key: ${{ runner.os }}-${{ hashFiles('**/plan.out.gpg') }}
+          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
@@ -193,11 +198,14 @@ jobs:
       #     name: ${{ inputs.terraform_workspace }}-encrypted-plan
       #     path: ${{ inputs.working_directory }}
 
-      - name: Restore cached Primes
-        uses: actions/cache/restore@v3
+      # GitHub - Restore Cache
+      # https://github.com/marketplace/actions/cache
+
+      - name: Step restore plan.out.gpg
+        uses: actions/cache/restore@v3.2.3
         with:
           path: ${{ inputs.working_directory }}
-          key: ${{ runner.os }}-${{ hashFiles('**/plan.out.gpg') }}
+          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
 
