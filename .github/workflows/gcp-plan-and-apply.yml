@@ -120,7 +120,7 @@ jobs:
         run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
 
       # Encrypt - Terraform plan.out
-      -
+
       # If your plan includes any sort of sensitive data, even if obscured in Terraform's terminal output,
       # it will be saved in cleartext in the plan file. You should therefore treat any saved plan files as
       # potentially-sensitive artifacts.
