@@ -93,6 +93,19 @@ jobs:
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+      # GitHub - Cache
+      # https://github.com/marketplace/actions/cache
+
+      - name: Step cache plan.out.gpg
+        id: cache-plan
+        if: steps.plan.outputs.exitcode == 2
+        uses: actions/cache@v3.2.3
+        with:
+          path: |
+            ${{ inputs.working_directory }}/plan.out.gpg
+            ${{ inputs.working_directory }}/.terraform
+          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
+
       # HashiCorp - Setup Terraform
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
 
@@ -139,18 +152,7 @@ jobs:
       #     name: ${{ inputs.terraform_workspace }}-encrypted-plan
       #     path: ${{ inputs.working_directory }}/plan.out.gpg
 
-      # GitHub - Cache
-      # https://github.com/marketplace/actions/cache
 
-      - name: Step cache plan.out.gpg
-        id: cache-plan
-        if: steps.plan.outputs.exitcode == 2
-        uses: actions/cache@v3.2.3
-        with:
-          path: |
-            ${{ inputs.working_directory }}/plan.out.gpg
-            ${{ inputs.working_directory }}/.terraform
-          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
@@ -217,7 +219,6 @@ jobs:
       # Decrypt - Terraform plan.out
 
       - name: Step decrypt plan.out
-        if: ${{ steps.cache-plan.outputs.cache-hit != 'true' }}
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --output plan.out plan.out.gpg
 
       # HashiCorp - Setup Terraform
