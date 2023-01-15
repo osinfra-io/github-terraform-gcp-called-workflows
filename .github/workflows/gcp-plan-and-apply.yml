@@ -192,7 +192,6 @@ jobs:
         with:
           path: |
             ${{ inputs.working_directory }}/plan.out.gpg
-            ${{ inputs.working_directory }}/.terraform
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
