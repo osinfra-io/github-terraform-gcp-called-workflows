@@ -93,14 +93,22 @@ jobs:
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+      # Provider Plugin Cache
+      # https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache
+
+      - name: Config Terraform plugin cache
+        run: |
+          echo 'plugin_cache_dir="${{ inputs.working_directory }}/.terraform.d/plugin-cache"' > ~/.terraformrc
+          mkdir -p ${{ inputs.working_directory }}/.terraform.d/plugin-cache
+
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
 
       - name: Setup Cache
-        id: cache
         uses: actions/cache@v3.2.3
         with:
           path: |
+            ${{ inputs.working_directory }}/.terraform.d/plugin-cache
             ${{ inputs.working_directory }}/plan.out.gpg
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
@@ -191,6 +199,7 @@ jobs:
         uses: actions/cache@v3.2.3
         with:
           path: |
+            ${{ inputs.working_directory }}/.terraform.d/plugin-cache
             ${{ inputs.working_directory }}/plan.out.gpg
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
