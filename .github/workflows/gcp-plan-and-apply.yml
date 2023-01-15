@@ -57,7 +57,7 @@ permissions:
 
 jobs:
   plan:
-    name: "Terraform: plan"
+    name: Terraform Plan
     runs-on: ubuntu-latest
 
     defaults:
@@ -112,21 +112,21 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: "Terraform: init"
+      - name: Terraform Initialize
         run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
 
-      - name: "Terraform: workspace"
+      - name: Terraform Workspace
         run: >-
           terraform workspace select ${{ inputs.terraform_workspace }} ||
           terraform workspace new ${{ inputs.terraform_workspace }}
 
-      - name: "Terraform: fmt"
+      - name: Terraform Format
         run: terraform fmt -check -diff
 
-      - name: "Terraform: validate"
+      - name: Terraform Validate
         run: terraform validate
 
-      - name: "Terraform: plan"
+      - name: Terraform Plan
         id: plan
         run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
 
@@ -136,7 +136,7 @@ jobs:
       # it will be saved in cleartext in the plan file. You should therefore treat any saved plan files as
       # potentially-sensitive artifacts.
 
-      - name: "Encrypt: plan.out"
+      - name: Encrypt
         if: steps.plan.outputs.exitcode == 2
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --symmetric --cipher-algo AES256 plan.out
 
@@ -144,7 +144,7 @@ jobs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
 
   apply:
-    name: "Terraform: apply"
+    name: Terraform Apply
     needs: plan
     if: needs.plan.outputs.planExitcode == 2
     runs-on: ubuntu-latest
@@ -197,7 +197,7 @@ jobs:
 
       # Decrypt - Terraform plan.out
 
-      - name: "Decrypt: plan.out"
+      - name: Decrypt
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --output plan.out plan.out.gpg
 
       # HashiCorp - Setup Terraform
@@ -208,11 +208,11 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: "Terraform: init"
+      - name: Terraform Initialize
         run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
 
-      - name: "Terraform: workspace"
+      - name: Terraform Workspace
         run: terraform workspace select ${{ inputs.terraform_workspace }}
 
-      - name: "Terraform: apply"
+      - name: Terraform Apply
         run: terraform apply plan.out
