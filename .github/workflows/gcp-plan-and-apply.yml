@@ -120,6 +120,10 @@ jobs:
         run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
 
       # Encrypt - Terraform plan.out
+      -
+      # If your plan includes any sort of sensitive data, even if obscured in Terraform's terminal output,
+      # it will be saved in cleartext in the plan file. You should therefore treat any saved plan files as
+      # potentially-sensitive artifacts.
 
       - name: Step encrypt plan.out
         if: steps.plan.outputs.exitcode == 2
@@ -143,8 +147,8 @@ jobs:
         uses: actions/cache@v3.2.3
         with:
           path: |
-           ${{ inputs.working_directory }}/plan.out.gpg
-           .terraform
+            ${{ inputs.working_directory }}/plan.out.gpg
+            ${{ inputs.working_directory }}/.terraform
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
     outputs:
