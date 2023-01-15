@@ -240,11 +240,11 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      # - name: Step terraform init
-      #   run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
+      - name: Step terraform init
+        run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
 
-      # - name: Step terraform workspace
-      #   run: terraform workspace select ${{ inputs.terraform_workspace }}
+      - name: Step terraform workspace
+        run: terraform workspace select ${{ inputs.terraform_workspace }}
 
       - name: Step terraform apply
         run: terraform apply plan.out
