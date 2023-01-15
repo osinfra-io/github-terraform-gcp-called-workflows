@@ -143,6 +143,7 @@ jobs:
       # https://github.com/marketplace/actions/cache
 
       - name: Step cache plan.out.gpg
+        id: cache-plan
         if: steps.plan.outputs.exitcode == 2
         uses: actions/cache@v3.2.3
         with:
@@ -204,18 +205,19 @@ jobs:
       #     name: ${{ inputs.terraform_workspace }}-encrypted-plan
       #     path: ${{ inputs.working_directory }}
 
-      # GitHub - Restore Cache
-      # https://github.com/marketplace/actions/cache
+      # # GitHub - Restore Cache
+      # # https://github.com/marketplace/actions/cache
 
-      - name: Step restore plan.out.gpg
-        uses: actions/cache/restore@v3.2.3
-        with:
-          path: ${{ inputs.working_directory }}
-          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
+      # - name: Step restore plan.out.gpg
+      #   uses: actions/cache/restore@v3.2.3
+      #   with:
+      #     path: ${{ inputs.working_directory }}
+      #     key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
 
       - name: Step decrypt plan.out
+        if: ${{ steps.cache-plan.outputs.cache-hit != 'true' }}
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --output plan.out plan.out.gpg
 
       # HashiCorp - Setup Terraform
