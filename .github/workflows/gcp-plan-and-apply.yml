@@ -215,6 +215,18 @@ jobs:
       #     path: ${{ inputs.working_directory }}
       #     key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
+      # GitHub - Cache
+      # https://github.com/marketplace/actions/cache
+
+      - name: Step cache plan.out.gpg
+        id: cache-plan
+        uses: actions/cache@v3.2.3
+        with:
+          path: |
+            ${{ inputs.working_directory }}/plan.out.gpg
+            ${{ inputs.working_directory }}/.terraform
+          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
+
       # Decrypt - Terraform plan.out
 
       - name: Step decrypt plan.out
