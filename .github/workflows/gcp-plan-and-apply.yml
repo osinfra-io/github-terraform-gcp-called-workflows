@@ -98,7 +98,6 @@ jobs:
 
       - name: Step cache plan.out.gpg
         id: cache-plan
-        if: steps.plan.outputs.exitcode == 2
         uses: actions/cache@v3.2.3
         with:
           path: |
