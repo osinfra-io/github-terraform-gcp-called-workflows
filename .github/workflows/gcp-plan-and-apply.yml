@@ -37,6 +37,7 @@ on:
         required: true
 
       # Uncomment if you have private modules
+
       # ssh_key:
       #   required: true
 
@@ -45,10 +46,12 @@ on:
 
 # If you use private modules you'll need this env variable to use
 # the same ssh-agent socket value across all jobs & steps.
+
 # env:
 #  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
 permissions:
+
   # The job or workflow run requires a permissions setting with id-token: write.
   # You won't be able to request the OIDC JWT ID token if the permissions setting
   # for id-token is set to read or none.
@@ -57,7 +60,7 @@ permissions:
 
 jobs:
   plan:
-    name: "Terraform: plan"
+    name: Terraform Plan
     runs-on: ubuntu-latest
 
     defaults:
@@ -65,10 +68,11 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
-      - name: Step checkout
+      - name: Checkout
         uses: actions/checkout@v3.3.0
         with:
           ref: ${{ inputs.checkout_ref }}
@@ -76,7 +80,7 @@ jobs:
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      - name: Step authenticate-to-google-cloud
+      - name: Authenticate to Google Cloud Platform
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
@@ -93,53 +97,59 @@ jobs:
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+      # GitHub - Cache
+      # https://github.com/marketplace/actions/cache
+
+      - name: Setup Cache
+        uses: actions/cache@v3.2.3
+        with:
+          path: |
+            ${{ inputs.working_directory }}/.terraform/providers
+            ${{ inputs.working_directory }}/.terraform/modules
+            ${{ inputs.working_directory }}/plan.out.gpg
+          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
+
       # HashiCorp - Setup Terraform
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
 
-      - name: Step setup-terraform
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Step terraform init
+      - name: Terraform Initialize
         run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
 
-      - name: Step terraform workspace
+      - name: Terraform Workspace
         run: >-
           terraform workspace select ${{ inputs.terraform_workspace }} ||
           terraform workspace new ${{ inputs.terraform_workspace }}
 
-      - name: Step terraform fmt
+      - name: Terraform Format
         run: terraform fmt -check -diff
 
-      - name: Step terraform validate
+      - name: Terraform Validate
         run: terraform validate
 
-      - name: Step terraform plan
+      - name: Terraform Plan
         id: plan
         run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
 
       # Encrypt - Terraform plan.out
 
-      - name: Step encrypt plan.out
+      # If your plan includes any sort of sensitive data, even if obscured in Terraform's terminal output,
+      # it will be saved in cleartext in the plan file. You should therefore treat any saved plan files as
+      # potentially-sensitive artifacts.
+
+      - name: Encrypt
         if: steps.plan.outputs.exitcode == 2
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --symmetric --cipher-algo AES256 plan.out
-
-      # Github - Upload Artifact
-      # https://github.com/marketplace/actions/upload-a-build-artifact
-
-      - name: Step upload-artifact
-        if: steps.plan.outputs.exitcode == 2
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: ${{ inputs.terraform_workspace }}-encrypted-plan
-          path: ${{ inputs.working_directory }}/plan.out.gpg
 
     outputs:
       planExitcode: ${{ steps.plan.outputs.exitcode }}
 
   apply:
-    name: "Terraform: apply"
+    name: Terraform Apply
     needs: plan
     if: needs.plan.outputs.planExitcode == 2
     runs-on: ubuntu-latest
@@ -151,10 +161,11 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
-      - name: Step checkout
+      - name: Checkout
         uses: actions/checkout@v3.3.0
         with:
           ref: ${{ inputs.checkout_ref }}
@@ -162,7 +173,7 @@ jobs:
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      - name: Step authenticate-to-google-cloud
+      - name: Authenticate to Google Cloud Platform
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
@@ -179,33 +190,36 @@ jobs:
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      # Github - Download Artifact
-      # https://github.com/marketplace/actions/download-a-build-artifact
+      # GitHub - Cache
+      # https://github.com/marketplace/actions/cache
 
-      - name: Step download-artifact
-        uses: actions/download-artifact@v3.0.2
+      - name: Restore Cache
+        uses: actions/cache/restore@v3.2.3
         with:
-          name: ${{ inputs.terraform_workspace }}-encrypted-plan
-          path: ${{ inputs.working_directory }}
+          path: |
+            ${{ inputs.working_directory }}/.terraform/providers
+            ${{ inputs.working_directory }}/.terraform/modules
+            ${{ inputs.working_directory }}/plan.out.gpg
+          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
 
-      - name: Step decrypt plan.out
+      - name: Decrypt
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --output plan.out plan.out.gpg
 
       # HashiCorp - Setup Terraform
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
 
-      - name: Step setup-terraform
+      - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      - name: Step terraform init
+      - name: Terraform Initialize
         run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
 
-      - name: Step terraform workspace
+      - name: Terraform Workspace
         run: terraform workspace select ${{ inputs.terraform_workspace }}
 
-      - name: Step terraform apply
+      - name: Terraform Apply
         run: terraform apply plan.out
