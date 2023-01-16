@@ -9,7 +9,7 @@ module "test" {
   folder_id                       = "21945465219"
 
   labels = {
-    key = "value",
+    environment = "sandbox"
   }
 
   prefix = "testing"
