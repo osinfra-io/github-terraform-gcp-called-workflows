@@ -37,6 +37,7 @@ on:
         required: true
 
       # Uncomment if you have private modules
+
       # ssh_key:
       #   required: true
 
@@ -45,10 +46,12 @@ on:
 
 # If you use private modules you'll need this env variable to use
 # the same ssh-agent socket value across all jobs & steps.
+
 # env:
 #  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
 permissions:
+
   # The job or workflow run requires a permissions setting with id-token: write.
   # You won't be able to request the OIDC JWT ID token if the permissions setting
   # for id-token is set to read or none.
@@ -65,6 +68,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
@@ -92,14 +96,6 @@ jobs:
       #     mkdir -p ~/.ssh
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      # # Provider Plugin Cache
-      # # https://developer.hashicorp.com/terraform/cli/config/config-file#provider-plugin-cache
-
-      # - name: Config Terraform plugin cache
-      #   run: |
-      #     echo 'plugin_cache_dir="${{ inputs.working_directory }}/.terraform.d/plugin-cache"' > ~/.terraformrc
-      #     mkdir -p ${{ inputs.working_directory }}/.terraform.d/plugin-cache
 
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
@@ -165,6 +161,7 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
@@ -196,8 +193,8 @@ jobs:
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
 
-      - name: Setup Cache
-        uses: actions/cache@v3.2.3
+      - name: Restore Cache
+        uses: actions/cache/restore@v3.2.3
         with:
           path: |
             ${{ inputs.working_directory }}/.terraform/providers
