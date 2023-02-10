@@ -101,7 +101,7 @@ jobs:
       # https://github.com/marketplace/actions/cache
 
       - name: Setup Cache
-        uses: actions/cache@v3.2.4
+        uses: actions/cache@v3.2.5
         with:
           path: |
             ${{ inputs.working_directory }}/.terraform/providers
@@ -194,7 +194,7 @@ jobs:
       # https://github.com/marketplace/actions/cache
 
       - name: Restore Cache
-        uses: actions/cache/restore@v3.2.4
+        uses: actions/cache/restore@v3.2.5
         with:
           path: |
             ${{ inputs.working_directory }}/.terraform/providers
