@@ -44,17 +44,17 @@ jobs:
       # https://github.com/marketplace/actions/kitchen-terraform-github-action
 
       - name: Step kitchen converge
-        uses: osinfra-io/github-kitchen-terraform-action@v1.2.2
+        uses: osinfra-io/github-kitchen-terraform-action@v1.2.3
         with:
           kitchen-command: converge
 
       - name: Step kitchen verify
-        uses: osinfra-io/github-kitchen-terraform-action@v1.2.2
+        uses: osinfra-io/github-kitchen-terraform-action@v1.2.3
         with:
           kitchen-command: verify
 
       - name: Step kitchen destroy
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: osinfra-io/github-kitchen-terraform-action@v1.2.2
+        uses: osinfra-io/github-kitchen-terraform-action@v1.2.3
         with:
           kitchen-command: destroy
