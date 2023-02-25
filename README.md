@@ -4,10 +4,6 @@
 
 [![Dependabot](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml)
 
-**[Bridgecrew](https://www.bridgecrew.cloud/projects?types=Passed&repository=osinfra-io%2Fgithub-terraform-gcp-called-workflows&branch=main):**
-
-[![Infrastructure Tests](https://www.bridgecrew.cloud/badges/github/osinfra-io/github-terraform-gcp-called-workflows/general)](https://www.bridgecrew.cloud/link/badge?vcs=github&fullRepo=osinfra-io%2Fgithub-terraform-gcp-called-workflows&benchmark=INFRASTRUCTURE+SECURITY)
-
 Reusing workflows avoids duplication. This makes workflows easier to maintain and allows you to create new workflows
 more quickly by building on the work of others, just as you do with actions.
 
