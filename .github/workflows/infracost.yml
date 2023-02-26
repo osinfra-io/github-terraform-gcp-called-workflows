@@ -17,6 +17,9 @@ on:
 # env:
 #  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
+permissions:
+  pull-requests: write
+
 jobs:
   infracost:
     name: Multi-project

@@ -9,17 +9,11 @@ on:
       github_environment:
         required: true
         type: string
-      service_account:
-        required: true
-        type: string
       terraform_version:
         required: true
         type: string
       terraform_plan_args:
         required: false
-        type: string
-      terraform_state_bucket:
-        required: true
         type: string
       terraform_workspace:
         required: true
@@ -28,12 +22,11 @@ on:
         required: false
         type: string
         default: .
-      workload_identity_provider:
-        required: true
-        type: string
 
     secrets:
       gpg_passphrase:
+        required: true
+      service_account:
         required: true
 
       # Uncomment if you have private modules
@@ -43,6 +36,10 @@ on:
 
       terraform_plan_secret_args:
         required: false
+      terraform_state_bucket:
+        required: true
+      workload_identity_provider:
+        required: true
 
 # If you use private modules you'll need this env variable to use
 # the same ssh-agent socket value across all jobs & steps.
@@ -80,7 +77,7 @@ jobs:
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      - name: Authenticate to Google Cloud Platform
+      - name: Authenticate
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
@@ -173,7 +170,7 @@ jobs:
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      - name: Authenticate to Google Cloud Platform
+      - name: Authenticate
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
