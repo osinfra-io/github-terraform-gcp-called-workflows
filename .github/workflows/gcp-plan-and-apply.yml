@@ -81,8 +81,8 @@ jobs:
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
-          service_account: ${{ inputs.service_account }}
-          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ secrets.service_account }}
+          workload_identity_provider: ${{ secrets.workload_identity_provider }}
 
       # GitHub - Setup SSH for Module Access
       # Uncomment if you have private modules
@@ -115,7 +115,7 @@ jobs:
           terraform_version: ${{ inputs.terraform_version }}
 
       - name: Terraform Initialize
-        run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
+        run: terraform init -backend-config="bucket=${{ secrets.terraform_state_bucket }}"
 
       - name: Terraform Workspace
         run: >-
@@ -174,8 +174,8 @@ jobs:
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
-          service_account: ${{ inputs.service_account }}
-          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ secrets.service_account }}
+          workload_identity_provider: ${{ secrets.workload_identity_provider }}
 
       # GitHub - Setup SSH for Module Access
       # Uncomment if you have private modules
@@ -213,7 +213,7 @@ jobs:
           terraform_version: ${{ inputs.terraform_version }}
 
       - name: Terraform Initialize
-        run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
+        run: terraform init -backend-config="bucket=${{ secrets.terraform_state_bucket }}"
 
       - name: Terraform Workspace
         run: terraform workspace select ${{ inputs.terraform_workspace }}
