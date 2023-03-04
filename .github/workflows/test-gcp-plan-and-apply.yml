@@ -9,6 +9,9 @@ on:
     paths-ignore:
       - "**.md"
 
+permissions:
+  id-token: write
+
 jobs:
   global_infra:
     name: "Global"
