@@ -59,6 +59,8 @@ jobs:
   plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.github_environment }}
 
     defaults:
       run:
