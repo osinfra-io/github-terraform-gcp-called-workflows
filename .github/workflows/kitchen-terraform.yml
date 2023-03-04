@@ -9,6 +9,7 @@ on:
       workload_identity_provider:
         required: true
         type: string
+
 permissions:
 
   # The job or workflow run requires a permissions setting with id-token: write.

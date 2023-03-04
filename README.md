@@ -18,7 +18,6 @@ Rather than copying and pasting from one workflow to another, you can make workf
 ### Workflows
 
 - [gcp-plan-and-apply.yml](.github/workflows/gcp-plan-and-apply.yml)
-- [infracost.yml](.github/workflows/infracost.yml)
 
 ### Example Google Cloud Platform Usage
 
@@ -81,20 +80,4 @@ jobs:
       workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-```
-
-### Example Infracost Usage
-
-```yaml
-name: Infracost
-
-on:
-  pull_request:
-
-jobs:
-  infracost:
-    name: Infracost
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/infracost.yml@v0.0.0
-    secrets:
-      infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
 ```
