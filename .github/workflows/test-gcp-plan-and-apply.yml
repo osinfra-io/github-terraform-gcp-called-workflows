@@ -17,7 +17,7 @@ jobs:
     with:
       checkout_ref: ${{ github.ref }}
       github_environment: "Sandbox Infrastructure: Global"
-      terraform_version: ${{ env.TERRAFORM_VERSION }}
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: global-sandbox
       working_directory: test
     secrets:
