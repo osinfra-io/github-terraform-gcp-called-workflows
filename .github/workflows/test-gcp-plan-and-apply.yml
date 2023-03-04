@@ -10,6 +10,13 @@ on:
       - "**.md"
 
 permissions:
+
+  # GITHUB_TOKEN permissions can only be the same or more restrictive in nested workflows.
+
+  # The job or workflow run requires a permissions setting with id-token: write.
+  # You won't be able to request the OIDC JWT ID token if the permissions setting
+  # for id-token is set to read or none.
+
   id-token: write
 
 jobs:

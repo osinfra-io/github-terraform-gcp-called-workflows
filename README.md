@@ -33,19 +33,19 @@ jobs:
   global_infra:
     name: "Global"
     uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
+    if: github.actor != 'dependabot[bot]'
     with:
       checkout_ref: ${{ github.ref }}
-      github_environment: "Development Infrastructure: Global"
-      service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_plan_args: -var-file=tfvars/dev.tfvars
-      terraform_state_bucket: nonprod-state-bucket
-      terraform_version: 1.3.6
-      terraform_workspace: nonprod-workspace
+      github_environment: "Sandbox Infrastructure: Global"
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      terraform_workspace: global-sandbox
       working_directory: global
-      workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      terraform_plan_secret_args: -var="token=${{ secrets.TOKEN }}"
+      service_account: ${{ secrets.SERVICE_ACCOUNT }}
+      terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
+      terraform_state_bucket: ${{ secrets.TERRAFORM_STATE_BUCKET }}
+      workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 
   us_east1_infra:
     name: "Infra: us-east1"
@@ -53,16 +53,16 @@ jobs:
     needs: global_infra
     with:
       checkout_ref: ${{ github.ref }}
-      github_environment: "Development Infrastructure: Regional - us-east1"
-      service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_plan_args: -var-file=tfvars/us-east1-dev.tfvars
-      terraform_state_bucket: nonprod-state-bucket
-      terraform_version: 1.3.6
-      terraform_workspace: nonprod-workspace-us-east1
+      github_environment: "Sandbox Infrastructure: us-east1"
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      terraform_workspace: us-east1-sandbox
       working_directory: regional
-      workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      service_account: ${{ secrets.SERVICE_ACCOUNT }}
+      terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
+      terraform_state_bucket: ${{ secrets.TERRAFORM_STATE_BUCKET }}
+      workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 
    us_east4_infra:
     name: "Infra: us-east4"
@@ -70,14 +70,14 @@ jobs:
     needs: global_infra
     with:
       checkout_ref: ${{ github.ref }}
-      github_environment: "Development Infrastructure: Regional - us-east4"
-      service_account: nonprod-serviceaccount@iam.gserviceaccount.com
-      terraform_version: 1.3.6
-      terraform_plan_args: -var-file=tfvars/us-east4-dev.tfvars
-      terraform_state_bucket: nonprod-state-bucket
-      terraform_workspace: nonprod-workspace-us-east4
+      github_environment: "Sandbox Infrastructure: us-east4"
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      terraform_workspace: us-east4-sandbox
       working_directory: regional
-      workload_identity_provider: projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      service_account: ${{ secrets.SERVICE_ACCOUNT }}
+      terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
+      terraform_state_bucket: ${{ secrets.TERRAFORM_STATE_BUCKET }}
+      workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 ```
