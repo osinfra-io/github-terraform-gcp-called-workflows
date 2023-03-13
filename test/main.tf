@@ -4,9 +4,9 @@ module "test" {
   billing_account                 = var.billing_account
   cost_center                     = "x000"
   description                     = "workflow"
-  cis_2_2_logging_sink_project_id = "shared-audit01-tff6-sb"
+  cis_2_2_logging_sink_project_id = "plt-lz-audit01-tf6e-sb"
   environment                     = "sb"
-  folder_id                       = "21945465219"
+  folder_id                       = "1069400145815"
 
   labels = {
     environment = "sandbox"

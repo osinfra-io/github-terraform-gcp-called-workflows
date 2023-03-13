@@ -9,17 +9,11 @@ on:
       github_environment:
         required: true
         type: string
-      service_account:
-        required: true
-        type: string
       terraform_version:
         required: true
         type: string
       terraform_plan_args:
         required: false
-        type: string
-      terraform_state_bucket:
-        required: true
         type: string
       terraform_workspace:
         required: true
@@ -28,12 +22,11 @@ on:
         required: false
         type: string
         default: .
-      workload_identity_provider:
-        required: true
-        type: string
 
     secrets:
       gpg_passphrase:
+        required: true
+      service_account:
         required: true
 
       # Uncomment if you have private modules
@@ -43,6 +36,10 @@ on:
 
       terraform_plan_secret_args:
         required: false
+      terraform_state_bucket:
+        required: true
+      workload_identity_provider:
+        required: true
 
 # If you use private modules you'll need this env variable to use
 # the same ssh-agent socket value across all jobs & steps.
@@ -50,18 +47,12 @@ on:
 # env:
 #  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
 
-permissions:
-
-  # The job or workflow run requires a permissions setting with id-token: write.
-  # You won't be able to request the OIDC JWT ID token if the permissions setting
-  # for id-token is set to read or none.
-
-  id-token: write
-
 jobs:
   plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.github_environment }}
 
     defaults:
       run:
@@ -80,12 +71,12 @@ jobs:
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      - name: Authenticate to Google Cloud Platform
+      - name: Authenticate
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
-          service_account: ${{ inputs.service_account }}
-          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ secrets.service_account }}
+          workload_identity_provider: ${{ secrets.workload_identity_provider }}
 
       # GitHub - Setup SSH for Module Access
       # Uncomment if you have private modules
@@ -118,7 +109,7 @@ jobs:
           terraform_version: ${{ inputs.terraform_version }}
 
       - name: Terraform Initialize
-        run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
+        run: terraform init -backend-config="bucket=${{ secrets.terraform_state_bucket }}"
 
       - name: Terraform Workspace
         run: >-
@@ -173,12 +164,12 @@ jobs:
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      - name: Authenticate to Google Cloud Platform
+      - name: Authenticate
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
-          service_account: ${{ inputs.service_account }}
-          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ secrets.service_account }}
+          workload_identity_provider: ${{ secrets.workload_identity_provider }}
 
       # GitHub - Setup SSH for Module Access
       # Uncomment if you have private modules
@@ -216,7 +207,7 @@ jobs:
           terraform_version: ${{ inputs.terraform_version }}
 
       - name: Terraform Initialize
-        run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
+        run: terraform init -backend-config="bucket=${{ secrets.terraform_state_bucket }}"
 
       - name: Terraform Workspace
         run: terraform workspace select ${{ inputs.terraform_workspace }}

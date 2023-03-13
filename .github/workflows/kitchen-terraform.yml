@@ -2,58 +2,48 @@ name: Kitchen-Terraform
 
 on:
   workflow_call:
-    inputs:
+    secrets:
       service_account:
         required: true
-        type: string
       workload_identity_provider:
         required: true
-        type: string
 
 jobs:
   kitchen-terraform:
     name: Kitchen-Terraform
     runs-on: ubuntu-latest
 
-    permissions:
-
-      # The job or workflow run requires a permissions setting with id-token: write.
-      # You won't be able to request the OIDC JWT ID token if the permissions setting
-      # for id-token is set to read or none.
-
-      id-token: write
-
     steps:
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
-      - name: Step checkout
+      - name: Checkout
         uses: actions/checkout@v3.3.0
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      - name: Step authenticate-to-google-cloud
+      - name: Authenticate
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
-          service_account: ${{ inputs.service_account }}
-          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ secrets.service_account }}
+          workload_identity_provider: ${{ secrets.workload_identity_provider }}
 
       # Kitchen Terraform
       # https://github.com/marketplace/actions/kitchen-terraform-github-action
 
-      - name: Step kitchen converge
+      - name: Converge
         uses: osinfra-io/github-kitchen-terraform-action@v1.2.3
         with:
           kitchen-command: converge
 
-      - name: Step kitchen verify
+      - name: Verify
         uses: osinfra-io/github-kitchen-terraform-action@v1.2.3
         with:
           kitchen-command: verify
 
-      - name: Step kitchen destroy
+      - name: Destroy
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: osinfra-io/github-kitchen-terraform-action@v1.2.3
         with:
