@@ -126,13 +126,16 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
+        run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
+
+      - name: Terraform Plan Summary
+        id: plan-summary
+        run: terraform show plan.out
 
       - name: Job Summary
         run: |
-          terraform show plan.out
           echo '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo '`terraform show plan.out`' >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.plan-summary.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '*Pushed by: @${{ github.actor }}, Action: `${{ github.event_name }}`*' >> $GITHUB_STEP_SUMMARY
 
