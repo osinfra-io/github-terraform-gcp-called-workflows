@@ -15,9 +15,15 @@ be centrally maintained.
 
 Rather than copying and pasting from one workflow to another, you can make workflows [reusable](https://docs.github.com/en/actions/learn-github-actions/reusing-workflows). You and anyone with access to the reusable workflow can then call the reusable workflow from another workflow.
 
+### Features
+
+- [OpenID Connect in Google Cloud Platform](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform)
+- [Approve or reject jobs awaiting review](https://docs.github.com/en/actions/managing-workflow-runs/reviewing-deployments)
+- [Job Summaries](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#adding-a-job-summary)
+
 ### Workflows
 
-- [gcp-plan-and-apply.yml](.github/workflows/gcp-plan-and-apply.yml)
+- [plan-and-apply.yml](.github/workflows/plan-and-apply.yml)
 
 ### Example Google Cloud Platform Usage
 
@@ -43,15 +49,15 @@ jobs:
     with:
       checkout_ref: ${{ github.ref }}
       github_environment: "Sandbox Infrastructure: Global"
+      service_account: "service-account@project-id.iam.gserviceaccount.com"
+      terraform_state_bucket: "terraform-state-bucket-sb"
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: global-sandbox
       working_directory: global
+      workload_identity_provider: "projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc"
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      service_account: ${{ secrets.SERVICE_ACCOUNT }}
       terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
-      terraform_state_bucket: ${{ secrets.TERRAFORM_STATE_BUCKET }}
-      workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 
   us_east1_infra:
     name: "Infra: us-east1"
@@ -60,15 +66,15 @@ jobs:
     with:
       checkout_ref: ${{ github.ref }}
       github_environment: "Sandbox Infrastructure: us-east1"
+      service_account: "service-account@project-id.iam.gserviceaccount.com"
+      terraform_state_bucket: "terraform-state-bucket-sb"
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: us-east1-sandbox
       working_directory: regional
+      workload_identity_provider: "projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc"
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      service_account: ${{ secrets.SERVICE_ACCOUNT }}
       terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
-      terraform_state_bucket: ${{ secrets.TERRAFORM_STATE_BUCKET }}
-      workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 
    us_east4_infra:
     name: "Infra: us-east4"
@@ -77,13 +83,13 @@ jobs:
     with:
       checkout_ref: ${{ github.ref }}
       github_environment: "Sandbox Infrastructure: us-east4"
+      service_account: "service-account@project-id.iam.gserviceaccount.com"
+      terraform_state_bucket: "terraform-state-bucket-sb"
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: us-east4-sandbox
       working_directory: regional
+      workload_identity_provider: "projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc"
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      service_account: ${{ secrets.SERVICE_ACCOUNT }}
       terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
-      terraform_state_bucket: ${{ secrets.TERRAFORM_STATE_BUCKET }}
-      workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 ```
