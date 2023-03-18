@@ -18,7 +18,7 @@ permissions:
 jobs:
   global_infra:
     name: "Global"
-    uses: ./.github/workflows/gcp-plan-and-apply.yml
+    uses: ./.github/workflows/plan-and-apply.yml
     if: github.actor != 'dependabot[bot]'
     with:
       checkout_ref: ${{ github.ref }}

@@ -59,7 +59,6 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
-
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
@@ -108,7 +107,12 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check -diff
+
       - name: Terraform Initialize
+        id: init
         run: terraform init -backend-config="bucket=${{ secrets.terraform_state_bucket }}"
 
       - name: Terraform Workspace
@@ -116,15 +120,31 @@ jobs:
           terraform workspace select ${{ inputs.terraform_workspace }} ||
           terraform workspace new ${{ inputs.terraform_workspace }}
 
-      - name: Terraform Format
-        run: terraform fmt -check -diff
-
       - name: Terraform Validate
+        id: validate
         run: terraform validate
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
+        run: terraform plan -no-color -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
+
+      - name: Terraform Plan Output
+        id: plan-output
+        uses: actions/github-script@v6
+        env:
+          PLAN: ${{ steps.plan.outputs.stdout }}
+        with:
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+            \`\`\`terraform\n
+            ${process.env.PLAN}
+            \`\`\`
+            </details>
+            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
       # Encrypt - Terraform plan.out
 
@@ -137,12 +157,13 @@ jobs:
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --symmetric --cipher-algo AES256 plan.out
 
     outputs:
-      planExitcode: ${{ steps.plan.outputs.exitcode }}
+      plan-output: ${{ steps.plan-output.outputs.result }}
+      plan-exit-code: ${{ steps.plan.outputs.exitcode }}
 
   apply:
     name: Terraform Apply
     needs: plan
-    if: needs.plan.outputs.planExitcode == 2
+    if: needs.plan.outputs.plan-exit-code == 2
     runs-on: ubuntu-latest
     environment:
       name: ${{ inputs.github_environment }}
@@ -152,6 +173,9 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+      - env:
+          PLAN_OUTPUT: ${{ needs.plan.outputs.plan-output }}
+        run: echo "$PLAN_OUTPUT" >> $GITHUB_STEP_SUMMARY
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
