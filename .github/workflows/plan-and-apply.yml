@@ -147,7 +147,17 @@ jobs:
             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
       - name: Job Summary
-        run: echo '${{ steps.plan-output.outputs.result }}' >> $GITHUB_STEP_SUMMARY
+        run: |
+          echo '#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`' >> $GITHUB_STEP_SUMMARY
+          echo '#### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`' >> $GITHUB_STEP_SUMMARY
+          echo '#### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`' >> $GITHUB_STEP_SUMMARY
+          echo '#### Terraform Plan 📖\`${{ steps.plan.outcome }}\`' >> $GITHUB_STEP_SUMMARY
+          echo '<details><summary>Show Plan</summary>' >> $GITHUB_STEP_SUMMARY
+          echo '\`\`\`terraform\n' >> $GITHUB_STEP_SUMMARY
+          echo '${process.env.PLAN}' >> $GITHUB_STEP_SUMMARY
+          echo '\`\`\`' >> $GITHUB_STEP_SUMMARY
+          echo '</details>' >> $GITHUB_STEP_SUMMARY
+          echo '*Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*' >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
