@@ -171,12 +171,12 @@ jobs:
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      # - name: Authenticate
-      #   uses: google-github-actions/auth@v1.0.0
-      #   with:
-      #     create_credentials_file: true
-      #     service_account: ${{ inputs.service_account }}
-      #     workload_identity_provider: ${{ inputs.workload_identity_provider }}
+      - name: Authenticate
+        uses: google-github-actions/auth@v1.0.0
+        with:
+          create_credentials_file: true
+          service_account: ${{ inputs.service_account }}
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
 
       # GitHub - Setup SSH for Module Access
       # Uncomment if you have private modules
