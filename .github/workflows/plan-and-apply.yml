@@ -95,8 +95,7 @@ jobs:
         uses: actions/cache@v3.3.1
         with:
           path: |
-            ${{ inputs.working_directory }}/.terraform
-            ${{ inputs.working_directory }}/plan.out.gpg
+            ${{ inputs.working_directory }}
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # HashiCorp - Setup Terraform
@@ -164,20 +163,20 @@ jobs:
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
-      - name: Checkout
-        uses: actions/checkout@v3.3.0
-        with:
-          ref: ${{ inputs.checkout_ref }}
+      # - name: Checkout
+      #   uses: actions/checkout@v3.3.0
+      #   with:
+      #     ref: ${{ inputs.checkout_ref }}
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
-      - name: Authenticate
-        uses: google-github-actions/auth@v1.0.0
-        with:
-          create_credentials_file: true
-          service_account: ${{ inputs.service_account }}
-          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+      # - name: Authenticate
+      #   uses: google-github-actions/auth@v1.0.0
+      #   with:
+      #     create_credentials_file: true
+      #     service_account: ${{ inputs.service_account }}
+      #     workload_identity_provider: ${{ inputs.workload_identity_provider }}
 
       # GitHub - Setup SSH for Module Access
       # Uncomment if you have private modules
@@ -196,8 +195,7 @@ jobs:
         uses: actions/cache/restore@v3.3.1
         with:
           path: |
-            ${{ inputs.working_directory }}/.terraform
-            ${{ inputs.working_directory }}/plan.out.gpg
+            ${{ inputs.working_directory }}
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
