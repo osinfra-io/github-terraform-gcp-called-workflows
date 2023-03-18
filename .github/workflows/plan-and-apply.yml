@@ -95,9 +95,9 @@ jobs:
         uses: actions/cache@v3.3.1
         with:
           path: |
-            ${{ inputs.working_directory }}.terraform
-            ${{ inputs.working_directory }}.terraform.lock.hcl
-            ${{ inputs.working_directory }}plan.out.gpg
+            ${{ inputs.working_directory }}/.terraform
+            ${{ inputs.working_directory }}/.terraform.lock.hcl
+            ${{ inputs.working_directory }}/plan.out.gpg
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # HashiCorp - Setup Terraform
@@ -197,9 +197,9 @@ jobs:
         uses: actions/cache/restore@v3.3.1
         with:
           path: |
-            ${{ inputs.working_directory }}.terraform
-            ${{ inputs.working_directory }}.terraform.lock.hcl
-            ${{ inputs.working_directory }}plan.out.gpg
+            ${{ inputs.working_directory }}/.terraform
+            ${{ inputs.working_directory }}/.terraform.lock.hcl
+            ${{ inputs.working_directory }}/plan.out.gpg
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
