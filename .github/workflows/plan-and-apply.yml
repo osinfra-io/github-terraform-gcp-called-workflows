@@ -97,6 +97,7 @@ jobs:
           path: |
             ${{ inputs.working_directory }}.terraform
             ${{ inputs.working_directory }}.terraform.lock.hcl
+            ${{ inputs.working_directory }}plan.out.gpg
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # HashiCorp - Setup Terraform
@@ -198,6 +199,7 @@ jobs:
           path: |
             ${{ inputs.working_directory }}.terraform
             ${{ inputs.working_directory }}.terraform.lock.hcl
+            ${{ inputs.working_directory }}plan.out.gpg
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
