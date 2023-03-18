@@ -130,7 +130,7 @@ jobs:
 
       - name: Terraform Plan Summary
         id: plan-summary
-        run: terraform show plan.out
+        run: terraform show -no-color plan.out
 
       - name: Job Summary
         run: |
