@@ -95,7 +95,8 @@ jobs:
         uses: actions/cache@v3.3.1
         with:
           path: |
-            ${{ inputs.working_directory }}
+            ${{ inputs.working_directory }}.terraform
+            ${{ inputs.working_directory }}.terraform.lock.hcl
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # HashiCorp - Setup Terraform
@@ -163,10 +164,10 @@ jobs:
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
-      # - name: Checkout
-      #   uses: actions/checkout@v3.3.0
-      #   with:
-      #     ref: ${{ inputs.checkout_ref }}
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+        with:
+          ref: ${{ inputs.checkout_ref }}
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
@@ -195,7 +196,8 @@ jobs:
         uses: actions/cache/restore@v3.3.1
         with:
           path: |
-            ${{ inputs.working_directory }}
+            ${{ inputs.working_directory }}.terraform
+            ${{ inputs.working_directory }}.terraform.lock.hcl
           key: cache-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
