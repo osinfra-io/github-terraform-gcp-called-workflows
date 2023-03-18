@@ -128,32 +128,16 @@ jobs:
         id: plan
         run: terraform plan -no-color -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
 
-      - name: Terraform Plan Output
-        id: plan-output
-        uses: actions/github-script@v6
+      - name: Job Summary
         env:
           PLAN: ${{ steps.plan.outputs.stdout }}
-        with:
-          script: |
-            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
-            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-            <details><summary>Show Plan</summary>
-            \`\`\`terraform\n
-            ${process.env.PLAN}
-            \`\`\`
-            </details>
-            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
-      - name: Job Summary
         run: |
           echo '#### Terraform Format and Style 🖌 ${{ steps.fmt.outcome }}' >> $GITHUB_STEP_SUMMARY
           echo '#### Terraform Initialization ⚙️ ${{ steps.init.outcome }}' >> $GITHUB_STEP_SUMMARY
           echo '#### Terraform Validation 🤖 ${{ steps.validate.outcome }}' >> $GITHUB_STEP_SUMMARY
           echo '#### Terraform Plan 📖 ${{ steps.plan.outcome }}' >> $GITHUB_STEP_SUMMARY
           echo '<details><summary>Show Plan</summary>' >> $GITHUB_STEP_SUMMARY
-          echo '```terraform\n' >> $GITHUB_STEP_SUMMARY
+          echo '```terraform\\n' >> $GITHUB_STEP_SUMMARY
           echo '${process.env.PLAN}' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '</details>' >> $GITHUB_STEP_SUMMARY
