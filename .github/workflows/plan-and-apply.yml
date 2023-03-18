@@ -129,8 +129,6 @@ jobs:
         run: terraform plan -no-color -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
 
       - name: Job Summary
-        env:
-          PLAN: ${{ steps.plan.outputs.stdout }}
         run: |
           echo '#### Terraform format and style 🖌 ${{ steps.fmt.outcome }}' >> $GITHUB_STEP_SUMMARY
           echo '#### Terraform initialization ⚙️ ${{ steps.init.outcome }}' >> $GITHUB_STEP_SUMMARY
@@ -139,7 +137,7 @@ jobs:
           echo '<details><summary>Show plan</summary>' >> $GITHUB_STEP_SUMMARY
           echo '```terraform' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
-          echo '${process.env.PLAN}' >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.plan.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '</details>' >> $GITHUB_STEP_SUMMARY
