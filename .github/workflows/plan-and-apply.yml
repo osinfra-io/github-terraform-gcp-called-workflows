@@ -138,10 +138,12 @@ jobs:
           echo '#### Terraform Plan 📖 ${{ steps.plan.outcome }}' >> $GITHUB_STEP_SUMMARY
           echo '<details><summary>Show Plan</summary>' >> $GITHUB_STEP_SUMMARY
           echo '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
           echo '${process.env.PLAN}' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '</details>' >> $GITHUB_STEP_SUMMARY
-          echo "*Pushed by: @${{ github.actor }}, Action: `${{ github.event_name }}`*" >> $GITHUB_STEP_SUMMARY
+          echo '*Pushed by: @${{ github.actor }}, Action: `${{ github.event_name }}`*' >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
