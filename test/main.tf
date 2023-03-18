@@ -10,7 +10,7 @@ module "test" {
 
   labels = {
     environment = "sandbox"
-    test        = "xxxx"
+    test        = "x"
   }
 
   prefix = "testing"
