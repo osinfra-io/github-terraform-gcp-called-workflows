@@ -215,12 +215,6 @@ jobs:
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
-      # - name: Terraform initialize
-      #   run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
-
-      # - name: Terraform Workspace
-      #   run: terraform workspace select ${{ inputs.terraform_workspace }}
-
       - name: Terraform apply
         id: apply
         run: terraform apply -no-color plan.out
