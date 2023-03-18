@@ -132,11 +132,11 @@ jobs:
         env:
           PLAN: ${{ steps.plan.outputs.stdout }}
         run: |
-          echo '#### Terraform Format and Style 🖌 ${{ steps.fmt.outcome }}' >> $GITHUB_STEP_SUMMARY
-          echo '#### Terraform Initialization ⚙️ ${{ steps.init.outcome }}' >> $GITHUB_STEP_SUMMARY
-          echo '#### Terraform Validation 🤖 ${{ steps.validate.outcome }}' >> $GITHUB_STEP_SUMMARY
-          echo '#### Terraform Plan 📖 ${{ steps.plan.outcome }}' >> $GITHUB_STEP_SUMMARY
-          echo '<details><summary>Show Plan</summary>' >> $GITHUB_STEP_SUMMARY
+          echo '#### Terraform format and style 🖌 ${{ steps.fmt.outcome }}' >> $GITHUB_STEP_SUMMARY
+          echo '#### Terraform initialization ⚙️ ${{ steps.init.outcome }}' >> $GITHUB_STEP_SUMMARY
+          echo '#### Terraform validation 🤖 ${{ steps.validate.outcome }}' >> $GITHUB_STEP_SUMMARY
+          echo '#### Terraform plan 📖 ${{ steps.plan.outcome }}' >> $GITHUB_STEP_SUMMARY
+          echo '<details><summary>Show plan</summary>' >> $GITHUB_STEP_SUMMARY
           echo '```terraform' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo '${process.env.PLAN}' >> $GITHUB_STEP_SUMMARY
