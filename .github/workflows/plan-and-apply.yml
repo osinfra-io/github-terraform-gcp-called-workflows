@@ -130,8 +130,9 @@ jobs:
 
       - name: Job Summary
         run: |
+          terraform show plan.out
           echo '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo '${{ steps.plan.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          echo '`terraform show plan.out`' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '*Pushed by: @${{ github.actor }}, Action: `${{ github.event_name }}`*' >> $GITHUB_STEP_SUMMARY
 
