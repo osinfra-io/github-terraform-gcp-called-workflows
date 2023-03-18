@@ -222,7 +222,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply plan.out
+        run: terraform apply -no-color plan.out
 
       - name: Job Summary
         run: |
