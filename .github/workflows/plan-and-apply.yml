@@ -108,11 +108,9 @@ jobs:
           terraform_version: ${{ inputs.terraform_version }}
 
       - name: Terraform Format
-        id: fmt
         run: terraform fmt -check -diff
 
       - name: Terraform Initialize
-        id: init
         run: terraform init -backend-config="bucket=${{ secrets.terraform_state_bucket }}"
 
       - name: Terraform Workspace
@@ -121,7 +119,6 @@ jobs:
           terraform workspace new ${{ inputs.terraform_workspace }}
 
       - name: Terraform Validate
-        id: validate
         run: terraform validate
 
       - name: Terraform Plan
@@ -137,7 +134,6 @@ jobs:
           echo '```terraform' >> $GITHUB_STEP_SUMMARY
           echo '${{ steps.plan-summary.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          echo '*Pushed by: @${{ github.actor }}, Action: `${{ github.event_name }}`*' >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
@@ -225,4 +221,11 @@ jobs:
         run: terraform workspace select ${{ inputs.terraform_workspace }}
 
       - name: Terraform Apply
+        id: apply
         run: terraform apply plan.out
+
+      - name: Job Summary
+        run: |
+          echo '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.apply.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
