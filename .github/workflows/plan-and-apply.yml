@@ -59,6 +59,10 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+      - env:
+          PLAN_OUTPUT: ${{ needs.setup.outputs.plan-output }}
+        run: echo "$PLAN_OUTPUT" >> $GITHUB_STEP_SUMMARY
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
