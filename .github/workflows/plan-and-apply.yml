@@ -147,7 +147,7 @@ jobs:
             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
       - name: Job Summary
-        run: echo "${{ steps.plan-output.outputs.result }}" >> $GITHUB_STEP_SUMMARY
+        run: echo '${{ steps.plan-output.outputs.result }}' >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
