@@ -23,12 +23,12 @@ jobs:
     with:
       checkout_ref: ${{ github.ref }}
       github_environment: "Sandbox Infrastructure: Global"
+      service_account: "plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com"
+      terraform_state_bucket: "plt-lz-testing-2c8b-sb"
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: global-sandbox
+      workload_identity_provider: "projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc"
       working_directory: test
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      service_account: ${{ secrets.SERVICE_ACCOUNT }}
       terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
-      terraform_state_bucket: ${{ secrets.TERRAFORM_STATE_BUCKET }}
-      workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
