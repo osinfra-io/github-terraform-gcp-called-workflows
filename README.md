@@ -2,7 +2,7 @@
 
 **[GitHub Actions](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions):**
 
-[![Dependabot](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml)
+[![Dependabot](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml) [![Test](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/test-plan-and-apply.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/test-plan-and-apply.yml)
 
 Reusing workflows avoids duplication. This makes workflows easier to maintain and allows you to create new workflows
 more quickly by building on the work of others, just as you do with actions.
