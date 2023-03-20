@@ -1,5 +1,5 @@
 terraform {
   backend "gcs" {
-    prefix = "github-terraform-called-workflows"
+    prefix = "devops-gcp-called-workflows"
   }
 }

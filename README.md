@@ -1,8 +1,8 @@
-# <img align="left" width="45" height="45" src="https://user-images.githubusercontent.com/1610100/201473670-e0e6bdeb-742f-4be1-a47a-3506309620a3.png"> Terraform Google Cloud Platform Called Workflows
+# Terraform Google Cloud Platform Called Workflows
 
-**[GitHub Actions](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions):**
+**[GitHub Actions](https://github.com/idexx-labs/github-terraform-gcp-called-workflows/actions):**
 
-[![Dependabot](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml) [![Test](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/test-plan-and-apply.yml/badge.svg)](https://github.com/osinfra-io/github-terraform-gcp-called-workflows/actions/workflows/test-plan-and-apply.yml)
+[![Dependabot](https://github.com/idexx-labs/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml/badge.svg)](https://github.com/idexx-labs/github-terraform-gcp-called-workflows/actions/workflows/local-dependabot.yml) [![Test](https://github.com/idexx-labs/github-terraform-gcp-called-workflows/actions/workflows/test-plan-and-apply.yml/badge.svg)](https://github.com/idexx-labs/github-terraform-gcp-called-workflows/actions/workflows/test-plan-and-apply.yml)
 
 Reusing workflows avoids duplication. This makes workflows easier to maintain and allows you to create new workflows
 more quickly by building on the work of others, just as you do with actions.
@@ -45,7 +45,7 @@ permissions:
 jobs:
   global_infra:
     name: "Global"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
+    uses: idexx-labs/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
     if: github.actor != 'dependabot[bot]'
     with:
       checkout_ref: ${{ github.ref }}
@@ -62,7 +62,7 @@ jobs:
 
   us_east1_infra:
     name: "Infra: us-east1"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
+    uses: idexx-labs/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
     needs: global_infra
     with:
       checkout_ref: ${{ github.ref }}
@@ -79,7 +79,7 @@ jobs:
 
    us_east4_infra:
     name: "Infra: us-east4"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
+    uses: idexx-labs/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
     needs: global_infra
     with:
       checkout_ref: ${{ github.ref }}

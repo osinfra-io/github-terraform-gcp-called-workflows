@@ -1,17 +1,12 @@
-module "test" {
-  source = "github.com/osinfra-io/terraform-google-project"
-
-  billing_account                 = var.billing_account
-  cost_center                     = "x000"
-  description                     = "workflow"
-  cis_2_2_logging_sink_project_id = "plt-lz-audit01-tf6e-sb"
-  environment                     = "sb"
-  folder_id                       = "1069400145815"
+module "storage_bucket" {
+  source = "git@github.com:idexx-labs/terraform-google-storage-bucket.git?ref=v1.0.0"
 
   labels = {
-    environment = "sandbox"
-    test        = "xx"
+    "environment" = "sandbox"
+    "test"        = "x"
   }
 
-  prefix = "testing"
+  location   = "us-east1"
+  name       = "test-plan-and-apply"
+  project_id = "devops-testing-tf40dbd6-sb"
 }
