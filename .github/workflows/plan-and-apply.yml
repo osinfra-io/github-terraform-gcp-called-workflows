@@ -98,7 +98,7 @@ jobs:
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-          key: ${{ inputs.terraform-workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # HashiCorp - Setup Terraform
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
@@ -200,7 +200,7 @@ jobs:
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-          key: ${{ inputs.terraform-workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
 
