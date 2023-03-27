@@ -78,10 +78,10 @@ jobs:
           service_account: ${{ inputs.service_account }}
           workload_identity_provider: ${{ inputs.workload_identity_provider }}
 
-      # GitHub - Setup SSH for Module Access
+      # GitHub - Setup SSH for private module access
       # Uncomment if you have private modules
 
-      # - name: Step ssh for private module access
+      # - name: Private module access
       #   run: |
       #     ssh-agent -a $SSH_AUTH_SOCK
       #     mkdir -p ~/.ssh
@@ -98,12 +98,12 @@ jobs:
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # HashiCorp - Setup Terraform
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
 
-      - name: Setup Terraform
+      - name: Terraform setup
         uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: ${{ inputs.terraform_version }}
@@ -180,10 +180,10 @@ jobs:
           service_account: ${{ inputs.service_account }}
           workload_identity_provider: ${{ inputs.workload_identity_provider }}
 
-      # GitHub - Setup SSH for Module Access
+      # GitHub - Setup SSH for private module access
       # Uncomment if you have private modules
 
-      # - name: Step ssh for private module access
+      # - name: Private module access
       #   run: |
       #     ssh-agent -a $SSH_AUTH_SOCK
       #     mkdir -p ~/.ssh
@@ -200,7 +200,7 @@ jobs:
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # Decrypt - Terraform plan.out
 
@@ -210,7 +210,7 @@ jobs:
       # HashiCorp - Setup Terraform
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
 
-      - name: Setup Terraform
+      - name: Terraform setup
         uses: hashicorp/setup-terraform@v2.0.3
         with:
           terraform_version: ${{ inputs.terraform_version }}
