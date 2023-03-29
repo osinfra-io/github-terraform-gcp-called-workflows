@@ -116,7 +116,7 @@ jobs:
       - name: Infracost Diff
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost diff --path=${{ inputs.working_directory }} \
+          infracost diff --path=. \
                          --compare-to /tmp/infracost-main.json \
                          --terraform-var-file=tfvars/sandbox.tfvars \
                          --usage-file=${{ inputs.infracost_usage_file }} \
@@ -126,7 +126,7 @@ jobs:
       - name: Infracost Diff
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
-          infracost diff --path=${{ inputs.working_directory }} \
+          infracost diff --path=. \
                          --compare-to /tmp/infracost-main.json \
                          --terraform-var-file=tfvars/sandbox.tfvars \
                          --usage-file=${{ inputs.infracost_usage_file }} \
