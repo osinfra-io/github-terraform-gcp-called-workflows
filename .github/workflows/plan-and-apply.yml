@@ -192,12 +192,12 @@ jobs:
       - name: Job summary
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost output --path=infracost-pr.json --format=github-comment >> $GITHUB_STEP_SUMMARY
+          infracost output --path=/tmp/infracost-pr.json --format=github-comment >> $GITHUB_STEP_SUMMARY
 
       - name: Job summary
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
-          infracost output --path=infracost-new-main.json --format=github-comment >> $GITHUB_STEP_SUMMARY
+          infracost output --path=/tmp/infracost-new-main.json --format=github-comment >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
