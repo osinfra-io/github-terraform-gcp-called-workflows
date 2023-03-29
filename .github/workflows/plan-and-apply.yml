@@ -116,23 +116,22 @@ jobs:
       - name: Infracost Diff
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost diff --terraform-var-file=tfvars/sandbox.tfvars \
+          infracost diff --path=${{ inputs.working_directory }} \
+                         --compare-to /tmp/infracost-main.json \
+                         --terraform-var-file=tfvars/sandbox.tfvars \
                          --usage-file=${{ inputs.infracost_usage_file }} \
                          --format=json \
-                         --out-file=/tmp/infracost-main.json \
                          --out-file=/tmp/infracost-pr.json \
-                         --path=${{ inputs.working_directory }}
 
       - name: Infracost Diff
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
-          infracost diff --terraform-var-file=tfvars/sandbox.tfvars \
+          infracost diff --path=${{ inputs.working_directory }} \
+                         --compare-to /tmp/infracost-main.json \
+                         --terraform-var-file=tfvars/sandbox.tfvars \
                          --usage-file=${{ inputs.infracost_usage_file }} \
                          --format=json \
-                         --out-file=/tmp/infracost-main.json \
                          --out-file=/tmp/infracost-new-main.json \
-                         --path=${{ inputs.working_directory }}
-
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
@@ -193,12 +192,12 @@ jobs:
       - name: Job summary
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost output --path infracost-pr.json --format github-comment >> $GITHUB_STEP_SUMMARY
+          infracost output --path=infracost-pr.json --format=github-comment >> $GITHUB_STEP_SUMMARY
 
       - name: Job summary
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
-          infracost output --path infracost-new-main.json --format github-comment >> $GITHUB_STEP_SUMMARY
+          infracost output --path=infracost-new-main.json --format=github-comment >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
