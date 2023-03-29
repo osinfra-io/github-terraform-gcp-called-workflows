@@ -5,7 +5,7 @@ module "test" {
   cost_center                     = "x000"
   description                     = "workflow"
   cis_2_2_logging_sink_project_id = "plt-lz-audit01-tf6e-sb"
-  environment                     = "sb"
+  environment                     = var.environment
   folder_id                       = "1069400145815"
 
   labels = {

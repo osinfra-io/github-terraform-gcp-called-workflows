@@ -6,6 +6,9 @@ on:
       checkout_ref:
         required: true
         type: string
+      infracost_usage_file:
+        required: true
+        type: string
       github_environment:
         required: true
         type: string
@@ -35,6 +38,8 @@ on:
     secrets:
       gpg_passphrase:
         required: true
+      infracost_api_key:
+        required: true
 
       # Uncomment if you have private modules
 
@@ -60,6 +65,44 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+      # GitHub - Cache
+      # https://github.com/marketplace/actions/cache
+
+      - name: Setup cache
+        uses: actions/cache@v3.3.1
+        with:
+          path: |
+            ${{ inputs.working_directory }}/.terraform
+            ${{ inputs.working_directory }}/.terraform.lock.hcl
+            ${{ inputs.working_directory }}/plan.out.gpg
+            ${{ inputs.working_directory }}/tmp/infracost-main.json
+          key: ${{ inputs.terraform_workspace }}
+
+      # GitHub - Checkout
+      # https://github.com/marketplace/actions/checkout
+
+      - name: InfraCost checkout
+        uses: actions/checkout@v3.5.0
+        if: ${{ inputs.checkout_ref != 'main'}}
+        with:
+          ref: main
+
+      # Infracost - Setup Infracost
+      # https://github.com/marketplace/actions/infracost-actions
+
+      - name: Infracost setup
+        uses: infracost/actions/setup@v2.1.0
+        with:
+          api-key: ${{ secrets.infracost_api_key }}
+
+      - name: Infracost pull request breakdown
+        if: ${{ inputs.checkout_ref != 'main'}}
+        run: |
+          infracost breakdown --terraform-var-file=tfvars/sandbox.tfvars \
+                              --usage-file=${{ inputs.infracost_usage_file }} \
+                              --format=json \
+                              --out-file=/tmp/infracost-main.json
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
@@ -67,6 +110,26 @@ jobs:
         uses: actions/checkout@v3.5.0
         with:
           ref: ${{ inputs.checkout_ref }}
+
+      # Generate an Infracost diff and save it to a JSON file.
+      - name: Infracost Diff
+        if: ${{ inputs.checkout_ref != 'main'}}
+        run: |
+          infracost diff --terraform-var-file=tfvars/sandbox.tfvars \
+                         --usage-file=${{ inputs.infracost_usage_file }} \
+                         --format=json \
+                         --out-file=/tmp/infracost-main.json
+                         --out-file=/tmp/infracost-pr.json
+
+      - name: Infracost Diff
+        if: ${{ inputs.checkout_ref == 'main'}}
+        run: |
+          infracost diff --terraform-var-file=tfvars/sandbox.tfvars \
+                         --usage-file=${{ inputs.infracost_usage_file }} \
+                         --format=json \
+                         --out-file=/tmp/infracost-main.json
+                         --out-file=/tmp/infracost-new-main.json
+
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
@@ -87,18 +150,6 @@ jobs:
       #     mkdir -p ~/.ssh
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      # GitHub - Cache
-      # https://github.com/marketplace/actions/cache
-
-      - name: Setup cache
-        uses: actions/cache@v3.3.1
-        with:
-          path: |
-            ${{ inputs.working_directory }}/.terraform
-            ${{ inputs.working_directory }}/.terraform.lock.hcl
-            ${{ inputs.working_directory }}/plan.out.gpg
-          key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # HashiCorp - Setup Terraform
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
@@ -130,11 +181,24 @@ jobs:
         id: plan-summary
         run: terraform show -no-color plan.out
 
+      - name: Infracost diff
+        run: infracost diff --path plan.out --format table --no-color --show-skipped
+
       - name: Job summary
         run: |
           echo '```terraform' >> $GITHUB_STEP_SUMMARY
           echo '${{ steps.plan-summary.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Job summary
+        if: ${{ inputs.checkout_ref != 'main'}}
+        run: |
+          infracost output --path infracost-pr.json --format github-comment >> $GITHUB_STEP_SUMMARY
+
+      - name: Job summary
+        if: ${{ inputs.checkout_ref == 'main'}}
+        run: |
+          infracost output --path infracost-new-main.json --format github-comment >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
