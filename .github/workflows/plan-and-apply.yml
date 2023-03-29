@@ -119,8 +119,9 @@ jobs:
           infracost diff --terraform-var-file=tfvars/sandbox.tfvars \
                          --usage-file=${{ inputs.infracost_usage_file }} \
                          --format=json \
-                         --out-file=/tmp/infracost-main.json
-                         --out-file=/tmp/infracost-pr.json
+                         --out-file=/tmp/infracost-main.json \
+                         --out-file=/tmp/infracost-pr.json \
+                         --path=${{ inputs.working_directory }}
 
       - name: Infracost Diff
         if: ${{ inputs.checkout_ref == 'main'}}
@@ -128,8 +129,9 @@ jobs:
           infracost diff --terraform-var-file=tfvars/sandbox.tfvars \
                          --usage-file=${{ inputs.infracost_usage_file }} \
                          --format=json \
-                         --out-file=/tmp/infracost-main.json
-                         --out-file=/tmp/infracost-new-main.json
+                         --out-file=/tmp/infracost-main.json \
+                         --out-file=/tmp/infracost-new-main.json \
+                         --path=${{ inputs.working_directory }}
 
 
       # Google Cloud Platform - Authenticate to Google Cloud
@@ -181,9 +183,6 @@ jobs:
       - name: Terraform plan summary
         id: plan-summary
         run: terraform show -no-color plan.out
-
-      - name: Infracost diff
-        run: infracost diff --path plan.out --format table --no-color --show-skipped
 
       - name: Job summary
         run: |
