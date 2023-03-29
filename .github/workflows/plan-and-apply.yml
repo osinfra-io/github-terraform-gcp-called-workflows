@@ -81,7 +81,7 @@ jobs:
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
-      - name: InfraCost checkout
+      - name: Infracost checkout
         uses: actions/checkout@v3.5.0
         if: ${{ inputs.checkout_ref != 'main'}}
         with:
@@ -101,7 +101,8 @@ jobs:
           infracost breakdown --terraform-var-file=tfvars/sandbox.tfvars \
                               --usage-file=${{ inputs.infracost_usage_file }} \
                               --format=json \
-                              --out-file=/tmp/infracost-main.json
+                              --out-file=/tmp/infracost-main.json \
+                              --path=${{ inputs.working_directory }}
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
