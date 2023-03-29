@@ -112,8 +112,7 @@ jobs:
         with:
           ref: ${{ inputs.checkout_ref }}
 
-      # Generate an Infracost diff and save it to a JSON file.
-      - name: Infracost Diff
+      - name: Infracost diff
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
           infracost diff --path=. \
@@ -123,7 +122,7 @@ jobs:
                          --format=json \
                          --out-file=/tmp/infracost-pr.json \
 
-      - name: Infracost Diff
+      - name: Infracost diff
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
           infracost diff --path=. \
