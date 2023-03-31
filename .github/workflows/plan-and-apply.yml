@@ -75,7 +75,7 @@ jobs:
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-            ${{ inputs.working_directory }}/tmp/infracost-main.json
+            ${{ inputs.working_directory }}/infracost-main.json
           key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # GitHub - Checkout
@@ -102,7 +102,7 @@ jobs:
                               --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                               --usage-file infracost/${{ inputs.environment }}.yml \
                               --format json \
-                              --out-file /tmp/infracost-main.json
+                              --out-file infracost-main.json
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
@@ -120,7 +120,7 @@ jobs:
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
-                         --out-file /tmp/infracost-pr.json
+                         --out-file infracost-pr.json
 
       - name: Infracost diff on main branch
         if: ${{ inputs.checkout_ref == 'main'}}
@@ -130,7 +130,7 @@ jobs:
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
-                         --out-file /tmp/infracost-new-main.json
+                         --out-file infracost-new-main.json
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
@@ -191,13 +191,13 @@ jobs:
       - name: Infracost summary on PR branch
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost output --path /tmp/infracost-pr.json \
+          infracost output --path infracost-pr.json \
                            --format github-comment >> $GITHUB_STEP_SUMMARY
 
       - name: Infracost summary on main branch
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
-          infracost output --path /tmp/infracost-new-main.json \
+          infracost output --path infracost-new-main.json \
                            --format github-comment >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
