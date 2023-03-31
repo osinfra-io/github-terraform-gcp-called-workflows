@@ -23,7 +23,7 @@ jobs:
     with:
       checkout_ref: ${{ github.ref }}
       github_environment: "Sandbox Infrastructure: Global"
-      infracost_usage_file: infracost/sandbox.yml
+      infracost_project: sandbox
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com
       terraform_plan_args: -var-file=tfvars/sandbox.tfvars
       terraform_state_bucket: plt-lz-testing-2c8b-sb

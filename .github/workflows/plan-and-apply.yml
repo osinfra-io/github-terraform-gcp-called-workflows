@@ -6,7 +6,7 @@ on:
       checkout_ref:
         required: true
         type: string
-      infracost_usage_file:
+      infracost_project:
         required: true
         type: string
       github_environment:
@@ -99,8 +99,8 @@ jobs:
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
           infracost breakdown --path . \
-                              --terraform-var-file tfvars/sandbox.tfvars \
-                              --usage-file ${{ inputs.infracost_usage_file }} \
+                              --terraform-var-file tfvars/${{ inputs.infracost_project }}.tfvars \
+                              --usage-file infracost/${{ inputs.infracost_project }}.yml \
                               --format json \
                               --out-file /tmp/infracost-main.json \
 
@@ -112,23 +112,23 @@ jobs:
         with:
           ref: ${{ inputs.checkout_ref }}
 
-      - name: Infracost diff
+      - name: Infracost diff on PR branch
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
           infracost diff --path . \
                          --compare-to /tmp/infracost-main.json \
-                         --terraform-var-file tfvars/sandbox.tfvars \
-                         --usage-file ${{ inputs.infracost_usage_file }} \
+                         --terraform-var-file tfvars/${{ inputs.infracost_project }}.tfvars \
+                         --usage-file infracost/${{ inputs.infracost_project }}.yml \
                          --format json \
                          --out-file /tmp/infracost-pr.json \
 
-      - name: Infracost diff
+      - name: Infracost diff on main branch
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
           infracost diff --path=. \
                          --compare-to /tmp/infracost-main.json \
-                         --terraform-var-file=tfvars/sandbox.tfvars \
-                         --usage-file=${{ inputs.infracost_usage_file }} \
+                         --terraform-var-file tfvars/${{ inputs.infracost_project }}.tfvars \
+                         --usage-file infracost/${{ inputs.infracost_project }}.yml \
                          --format=json \
                          --out-file=/tmp/infracost-new-main.json \
 
