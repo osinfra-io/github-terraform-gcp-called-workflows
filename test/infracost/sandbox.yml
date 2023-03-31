@@ -9,7 +9,7 @@ resource_type_default_usage:
   ## All values are commented-out, you can uncomment resource types and customize as needed.
   ##
   google_logging_project_sink:
-    monthly_logging_data_gb: 0.0 # Monthly logging data in GB.
+    monthly_logging_data_gb: 5.0 # Monthly logging data in GB.
 # resource_usage:
   ##
   ## The following usage values apply to individual resources and override any value defined in the resource_type_default_usage section.

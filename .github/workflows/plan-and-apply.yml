@@ -102,7 +102,7 @@ jobs:
                               --terraform-var-file tfvars/${{ inputs.infracost_project }}.tfvars \
                               --usage-file infracost/${{ inputs.infracost_project }}.yml \
                               --format json \
-                              --out-file /tmp/infracost-main.json \
+                              --out-file /tmp/infracost-main.json
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
@@ -120,7 +120,7 @@ jobs:
                          --terraform-var-file tfvars/${{ inputs.infracost_project }}.tfvars \
                          --usage-file infracost/${{ inputs.infracost_project }}.yml \
                          --format json \
-                         --out-file /tmp/infracost-pr.json \
+                         --out-file /tmp/infracost-pr.json
 
       - name: Infracost diff on main branch
         if: ${{ inputs.checkout_ref == 'main'}}
@@ -130,7 +130,7 @@ jobs:
                          --terraform-var-file tfvars/${{ inputs.infracost_project }}.tfvars \
                          --usage-file infracost/${{ inputs.infracost_project }}.yml \
                          --format=json \
-                         --out-file=/tmp/infracost-new-main.json \
+                         --out-file=/tmp/infracost-new-main.json
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
@@ -191,12 +191,14 @@ jobs:
       - name: Infracost summary on PR branch
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost output --path /tmp/infracost-pr.json --format github-comment >> $GITHUB_STEP_SUMMARY
+          infracost output --path /tmp/infracost-pr.json \
+                           --format github-comment >> $GITHUB_STEP_SUMMARY
 
       - name: Infracost summary on main branch
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
-          infracost output --path /tmp/infracost-new-main.json --format github-comment >> $GITHUB_STEP_SUMMARY
+          infracost output --path /tmp/infracost-new-main.json \
+                           --format github-comment >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
