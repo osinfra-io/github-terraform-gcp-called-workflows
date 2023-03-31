@@ -76,7 +76,7 @@ jobs:
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
             ${{ inputs.working_directory }}/tmp/infracost-main.json
-          key: ${{ inputs.terraform_workspace }}
+          key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
@@ -178,14 +178,10 @@ jobs:
         id: plan
         run: terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
 
-      - name: Terraform plan summary
-        id: plan-summary
-        run: terraform show -no-color plan.out
-
       - name: Terraform summary
         run: |
           echo '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo '${{ steps.plan-summary.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          terraform show -no-color plan.out >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Infracost summary on PR branch
