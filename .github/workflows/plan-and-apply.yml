@@ -98,11 +98,11 @@ jobs:
       - name: Infracost pull request breakdown
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost breakdown --terraform-var-file tfvars/sandbox.tfvars \
+          infracost breakdown --path . \
+                              --terraform-var-file tfvars/sandbox.tfvars \
                               --usage-file ${{ inputs.infracost_usage_file }} \
                               --format json \
                               --out-file /tmp/infracost-main.json \
-                              --path=${{ inputs.working_directory }}
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
