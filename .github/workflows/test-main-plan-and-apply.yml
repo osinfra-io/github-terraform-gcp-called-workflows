@@ -1,13 +1,10 @@
-name: Test
+name: Test Main
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-    paths-ignore:
-      - "**.md"
+  push:
+    branches:
+      - main
 
 # For reusable workflows, the permissions setting for id-token should be set to write at the
 # caller workflow level or in the specific job that calls the reusable workflow.
@@ -22,13 +19,13 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     with:
       checkout_ref: ${{ github.ref }}
-      environment: sandbox
-      github_environment: "Sandbox Infrastructure: Global"
+      environment: main
+      github_environment: "Main Test: Global"
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com
       terraform_plan_args: -var-file=tfvars/sandbox.tfvars
       terraform_state_bucket: plt-lz-testing-2c8b-sb
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      terraform_workspace: global-sandbox
+      terraform_workspace: global-main
       working_directory: test
       workload_identity_provider: projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
