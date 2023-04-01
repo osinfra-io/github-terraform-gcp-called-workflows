@@ -9,11 +9,16 @@ on:
       workload_identity_provider:
         required: true
         type: string
+    secrets:
+      kitchen_secrets:
+        required: false
 
 jobs:
   kitchen_terraform:
     name: Kitchen-Terraform
     runs-on: ubuntu-latest
+    env:
+      BILLING_ACCOUNT: ${{ secrets.BILLING_ACCOUNT }}
 
     steps:
       # GitHub - Checkout
