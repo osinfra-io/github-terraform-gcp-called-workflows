@@ -18,7 +18,7 @@ jobs:
     name: Kitchen-Terraform
     runs-on: ubuntu-latest
     env:
-      BILLING_ACCOUNT: ${{ secrets.BILLING_ACCOUNT }}
+      BILLING_ACCOUNT: ${{ secrets.billing_account }}
 
     steps:
       # GitHub - Checkout
