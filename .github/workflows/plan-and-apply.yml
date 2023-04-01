@@ -98,7 +98,7 @@ jobs:
       - name: Infracost pull request breakdown
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost breakdown --path . \
+          infracost breakdown --path test \
                               --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                               --usage-file infracost/${{ inputs.environment }}.yml \
                               --format json \
@@ -115,7 +115,7 @@ jobs:
       - name: Infracost diff on PR branch
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost diff --path . \
+          infracost diff --path test \
                          --compare-to infracost.json \
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
@@ -125,7 +125,7 @@ jobs:
       - name: Infracost diff on main branch
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
-          infracost diff --path . \
+          infracost diff --path test \
                          --compare-to infracost.json \
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
