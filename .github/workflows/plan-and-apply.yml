@@ -75,7 +75,7 @@ jobs:
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-            ${{ inputs.working_directory }}/infracost.json
+            ${{ inputs.working_directory }}//tmp/infracost.json
           key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # GitHub - Checkout
@@ -102,7 +102,7 @@ jobs:
                               --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                               --usage-file infracost/${{ inputs.environment }}.yml \
                               --format json \
-                              --out-file infracost.json
+                              --out-file /tmp/infracost.json
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
@@ -116,7 +116,7 @@ jobs:
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
           infracost diff --path test \
-                         --compare-to infracost.json \
+                         --compare-to /tmp/infracost.json \
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
@@ -126,7 +126,7 @@ jobs:
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
           infracost diff --path test \
-                         --compare-to infracost.json \
+                         --compare-to /tmp/infracost.json \
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
