@@ -3,10 +3,10 @@ module "test" {
 
   billing_account                 = var.billing_account
   cost_center                     = "x000"
+  cis_2_2_logging_sink_project_id = var.cis_2_2_logging_sink_project_id
   description                     = "workflow"
-  cis_2_2_logging_sink_project_id = "plt-lz-audit01-tf6e-sb"
   environment                     = var.environment
-  folder_id                       = "1069400145815"
+  folder_id                       = var.folder_id
 
   labels = {
     environment = var.environment

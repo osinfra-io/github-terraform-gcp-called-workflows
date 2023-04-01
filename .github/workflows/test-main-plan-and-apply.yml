@@ -21,13 +21,13 @@ jobs:
       checkout_ref: ${{ github.ref }}
       environment: non-production
       github_environment: "Test Main: Global"
-      service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com
+      service_account: plt-lz-testing-github@ptl-lz-terraform-tf05-nonprod.iam.gserviceaccount.com
       terraform_plan_args: -var-file=tfvars/non-production.tfvars
-      terraform_state_bucket: plt-lz-testing-2c8b-sb
+      terraform_state_bucket: plt-lz-testing-3bfe-nonprod
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: global-non-production
       working_directory: test
-      workload_identity_provider: projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
+      workload_identity_provider: projects/992372365053/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
       infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
