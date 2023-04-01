@@ -19,13 +19,13 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     with:
       checkout_ref: ${{ github.ref }}
-      environment: main
+      environment: non-production
       github_environment: "Test Main: Global"
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com
-      terraform_plan_args: -var-file=tfvars/main.tfvars
+      terraform_plan_args: -var-file=tfvars/non-production.tfvars
       terraform_state_bucket: plt-lz-testing-2c8b-sb
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      terraform_workspace: global-main
+      terraform_workspace: global-non-production
       working_directory: test
       workload_identity_provider: projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:

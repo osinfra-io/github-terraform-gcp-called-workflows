@@ -9,7 +9,7 @@ module "test" {
   folder_id                       = "1069400145815"
 
   labels = {
-    environment = "sandbox"
+    environment = var.environment
     test        = "bar"
   }
 
