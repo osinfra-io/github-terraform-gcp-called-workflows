@@ -126,7 +126,7 @@ jobs:
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
-                         --out-file infracost-pr.json
+                         --out-file /tmp/infracost-pr.json
 
       - name: Infracost diff on main branch
         if: ${{ inputs.checkout_ref == 'main'}}
@@ -136,7 +136,7 @@ jobs:
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
-                         --out-file infracost-main.json
+                         --out-file /tmp/infracost-main.json
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
@@ -197,13 +197,13 @@ jobs:
       - name: Infracost summary on PR branch
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
-          infracost output --path infracost-pr.json \
+          infracost output --path /tmp/infracost-pr.json \
                            --format github-comment >> $GITHUB_STEP_SUMMARY
 
       - name: Infracost summary on main branch
         if: ${{ inputs.checkout_ref == 'main'}}
         run: |
-          infracost output --path infracost-main.json \
+          infracost output --path /tmp/infracost-main.json \
                            --format github-comment >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out

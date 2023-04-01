@@ -25,7 +25,7 @@ jobs:
       environment: pr
       github_environment: "PR Test: Global"
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com
-      terraform_plan_args: -var-file=tfvars/sandbox.tfvars
+      terraform_plan_args: -var-file=tfvars/pr.tfvars
       terraform_state_bucket: plt-lz-testing-2c8b-sb
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: global-pr
