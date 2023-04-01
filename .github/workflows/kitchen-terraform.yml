@@ -10,7 +10,7 @@ on:
         required: true
         type: string
     secrets:
-      kitchen_secrets:
+      billing_account:
         required: false
 
 jobs:
