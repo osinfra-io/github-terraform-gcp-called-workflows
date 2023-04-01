@@ -75,17 +75,23 @@ jobs:
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-            ${{ inputs.working_directory }}//tmp/infracost.json
           key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
-      - name: Infracost checkout
+      - name: Infracost checkout on PR branch
         uses: actions/checkout@v3.5.0
         if: ${{ inputs.checkout_ref != 'main'}}
         with:
           ref: main
+
+      - name: Infracost checkout on main branch
+        uses: actions/checkout@v3.5.0
+        if: ${{ inputs.checkout_ref == 'main'}}
+        with:
+          ref: ${{ github.ref.before }}
+
 
       # Infracost - Setup Infracost
       # https://github.com/marketplace/actions/infracost-actions
