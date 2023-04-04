@@ -68,25 +68,6 @@ jobs:
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
 
-      - name: Debug
-        working-directory: .
-        run: |
-          echo ${{ inputs.checkout_ref }}
-          echo ${{ github.ref }}
-          echo ${{ github.ref.before }}
-          echo ${{ github.ref.after }}
-          echo ${{ github.ref.head }}
-          echo ${{ github.ref.base }}
-          echo ${{ github.ref.head_ref }}
-          echo ${{ github.ref.base_ref }}
-          echo ${{ github.ref.pull_request }}
-          echo ${{ github.ref.pull_request_head }}
-          echo ${{ github.ref.pull_request_base }}
-          echo ${{ github.ref.pull_request_head_ref }}
-          echo ${{ github.ref.pull_request_base_ref }}
-          echo ${{ github.ref.pull_request_head_sha }}
-
-
       - name: Setup cache
         uses: actions/cache@v3.3.1
         with:
@@ -121,7 +102,6 @@ jobs:
           api-key: ${{ secrets.infracost_api_key }}
 
       - name: Infracost pull request breakdown
-        if: ${{ inputs.checkout_ref != 'refs/heads/main'}}
         run: |
           infracost breakdown --path . \
                               --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
@@ -137,25 +117,14 @@ jobs:
         with:
           ref: ${{ inputs.checkout_ref }}
 
-      - name: Infracost diff on PR branch
-        if: ${{ inputs.checkout_ref != 'refs/heads/main'}}
+      - name: Infracost diff
         run: |
           infracost diff --path . \
                          --compare-to /tmp/infracost.json \
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
-                         --out-file /tmp/infracost-pr.json
-
-      - name: Infracost diff on main branch
-        if: ${{ inputs.checkout_ref == 'refs/heads/main'}}
-        run: |
-          infracost diff --path . \
-                         --compare-to /tmp/infracost.json \
-                         --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
-                         --usage-file infracost/${{ inputs.environment }}.yml \
-                         --format json \
-                         --out-file /tmp/infracost-main.json
+                         --out-file /tmp/infracost-diff.json
 
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
@@ -207,16 +176,9 @@ jobs:
         id: show
         run: terraform show -no-color plan.out
 
-      - name: Infracost summary on PR branch
-        if: ${{ inputs.checkout_ref != 'refs/heads/main'}}
+      - name: Infracost summary
         run: |
-          infracost output --path /tmp/infracost-pr.json \
-                           --format github-comment >> $GITHUB_STEP_SUMMARY
-
-      - name: Infracost summary on main branch
-        if: ${{ inputs.checkout_ref == 'refs/heads/main'}}
-        run: |
-          infracost output --path /tmp/infracost-main.json \
+          infracost output --path /tmp/infracost-diff.json \
                            --format github-comment >> $GITHUB_STEP_SUMMARY
 
       - name: Terraform summary
