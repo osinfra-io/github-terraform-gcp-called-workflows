@@ -68,6 +68,9 @@ jobs:
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
 
+      - name: Debug
+        run: echo ${{ github.ref }}
+
       - name: Setup cache
         uses: actions/cache@v3.3.1
         with:
