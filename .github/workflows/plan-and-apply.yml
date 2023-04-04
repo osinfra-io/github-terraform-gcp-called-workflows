@@ -101,13 +101,13 @@ jobs:
 
       - name: Infracost checkout on PR branch
         uses: actions/checkout@v3.5.0
-        if: ${{ inputs.checkout_ref != 'main'}}
+        if: ${{ inputs.checkout_ref != 'refs/heads/main'}}
         with:
           ref: main
 
       - name: Infracost checkout on main branch
         uses: actions/checkout@v3.5.0
-        if: ${{ inputs.checkout_ref == 'main'}}
+        if: ${{ inputs.checkout_ref == 'refs/heads/main'}}
         with:
           ref: ${{ github.ref.before }}
 
@@ -121,7 +121,7 @@ jobs:
           api-key: ${{ secrets.infracost_api_key }}
 
       - name: Infracost pull request breakdown
-        if: ${{ inputs.checkout_ref != 'main'}}
+        if: ${{ inputs.checkout_ref != 'refs/heads/main'}}
         run: |
           infracost breakdown --path . \
                               --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
@@ -138,7 +138,7 @@ jobs:
           ref: ${{ inputs.checkout_ref }}
 
       - name: Infracost diff on PR branch
-        if: ${{ inputs.checkout_ref != 'main'}}
+        if: ${{ inputs.checkout_ref != 'refs/heads/main'}}
         run: |
           infracost diff --path . \
                          --compare-to /tmp/infracost.json \
@@ -148,7 +148,7 @@ jobs:
                          --out-file /tmp/infracost-pr.json
 
       - name: Infracost diff on main branch
-        if: ${{ inputs.checkout_ref == 'main'}}
+        if: ${{ inputs.checkout_ref == 'refs/heads/main'}}
         run: |
           infracost diff --path . \
                          --compare-to /tmp/infracost.json \
@@ -208,13 +208,13 @@ jobs:
         run: terraform show -no-color plan.out
 
       - name: Infracost summary on PR branch
-        if: ${{ inputs.checkout_ref != 'main'}}
+        if: ${{ inputs.checkout_ref != 'refs/heads/main'}}
         run: |
           infracost output --path /tmp/infracost-pr.json \
                            --format github-comment >> $GITHUB_STEP_SUMMARY
 
       - name: Infracost summary on main branch
-        if: ${{ inputs.checkout_ref == 'main'}}
+        if: ${{ inputs.checkout_ref == 'refs/heads/main'}}
         run: |
           infracost output --path /tmp/infracost-main.json \
                            --format github-comment >> $GITHUB_STEP_SUMMARY
