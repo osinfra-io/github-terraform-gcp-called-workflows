@@ -2,16 +2,23 @@ name: Kitchen-Terraform
 
 on:
   workflow_call:
-    secrets:
+    inputs:
       service_account:
         required: true
+        type: string
       workload_identity_provider:
         required: true
+        type: string
+    secrets:
+      billing_account:
+        required: false
 
 jobs:
-  kitchen-terraform:
+  kitchen_terraform:
     name: Kitchen-Terraform
     runs-on: ubuntu-latest
+    env:
+      BILLING_ACCOUNT: ${{ secrets.billing_account }}
 
     steps:
       # GitHub - Checkout
@@ -27,8 +34,8 @@ jobs:
         uses: google-github-actions/auth@v1.0.0
         with:
           create_credentials_file: true
-          service_account: ${{ secrets.service_account }}
-          workload_identity_provider: ${{ secrets.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
 
       # Kitchen Terraform
       # https://github.com/marketplace/actions/kitchen-terraform-github-action
