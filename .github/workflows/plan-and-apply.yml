@@ -69,6 +69,7 @@ jobs:
       # https://github.com/marketplace/actions/cache
 
       - name: Debug
+        working-directory: .
         run: |
           echo ${{ inputs.checkout_ref }}
           echo ${{ github.ref }}
