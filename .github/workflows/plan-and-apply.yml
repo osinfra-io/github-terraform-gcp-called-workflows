@@ -188,12 +188,6 @@ jobs:
         id: show
         run: terraform show -no-color plan.out
 
-      - name: Terraform summary
-        run: |
-          echo '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo '${{ steps.show.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-
       - name: Infracost summary on PR branch
         if: ${{ inputs.checkout_ref != 'main'}}
         run: |
@@ -205,6 +199,13 @@ jobs:
         run: |
           infracost output --path /tmp/infracost-main.json \
                            --format github-comment >> $GITHUB_STEP_SUMMARY
+
+      - name: Terraform summary
+        run: |
+          echo '🛠️ Terraform Plan 📖' >> $GITHUB_STEP_SUMMARY
+          echo '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.show.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
