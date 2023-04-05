@@ -68,6 +68,25 @@ jobs:
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
 
+      - name: Debug
+        working-directory: .
+        run: |
+          echo ${{ inputs.checkout_ref }}
+          echo ${{ github.ref }}
+          echo ${{ github.ref.before }}
+          echo ${{ github.ref.after }}
+          echo ${{ github.ref.head }}
+          echo ${{ github.ref.base }}
+          echo ${{ github.ref.head_ref }}
+          echo ${{ github.ref.base_ref }}
+          echo ${{ github.ref.pull_request }}
+          echo ${{ github.ref.pull_request_head }}
+          echo ${{ github.ref.pull_request_base }}
+          echo ${{ github.ref.pull_request_head_ref }}
+          echo ${{ github.ref.pull_request_base_ref }}
+          echo ${{ github.ref.pull_request_head_sha }}
+
+
       - name: Setup cache
         uses: actions/cache@v3.3.1
         with:

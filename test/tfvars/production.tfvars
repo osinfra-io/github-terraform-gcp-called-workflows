@@ -1,3 +1,3 @@
-cis_2_2_logging_sink_project_id = "plt-lz-audit01-tfe6-nonprod"
-environment = "nonprod"
-folder_id = "1094321749831"
+cis_2_2_logging_sink_project_id = "plt-lz-audit01-tf24-prod"
+environment = "prod"
+folder_id = "642644757390"
