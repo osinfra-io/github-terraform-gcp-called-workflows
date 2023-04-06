@@ -26,7 +26,11 @@ Rather than copying and pasting from one workflow to another, you can make workf
 
 - [plan-and-apply.yml](.github/workflows/plan-and-apply.yml)
 
-### Example Usage
+### Usage
+
+You can check the [test](test) directory for example configurations. These set up the system for the testing process by providing it with all the necessary code to initialize it, thus creating good examples to base your configurations on.
+
+Here is an example of a basic configuration:
 
 ```yaml
 name: Sandbox
