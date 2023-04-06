@@ -21,6 +21,6 @@ module "bucket" {
 
   force_destroy = true
   location      = "US"
-  name          = "test"
+  name          = "test-tf5t72-${var.environment}"
   project       = module.test.project_id
 }
