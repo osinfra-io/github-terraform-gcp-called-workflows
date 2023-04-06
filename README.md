@@ -28,7 +28,7 @@ Rather than copying and pasting from one workflow to another, you can make workf
 
 ### Usage
 
-You can check the [test](test) directory for example configurations. These set up the system for the testing process by providing it with all the necessary code to initialize it, thus creating good examples to base your configurations on.
+You can check the [.github/workflows](.github/workflows/) directory for example configurations ([sandbox.yml](.github/workflows/sandbox.yml), [non-production.yml](.github/workflows/non-production.yml), [production.yml](.github/workflows/production.yml)). These set up the system for the testing process by providing it with all the necessary code to initialize it, thus creating good examples to base your configuration on.
 
 Here is an example of a basic configuration:
 
