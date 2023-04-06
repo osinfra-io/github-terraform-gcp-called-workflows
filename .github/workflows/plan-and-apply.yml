@@ -140,6 +140,9 @@ jobs:
         id: plan
         run: |
           terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
+
+      - name: Terraform json
+        run: |
           terraform show -json plan.out > plan.json
 
       - name: Terraform show
