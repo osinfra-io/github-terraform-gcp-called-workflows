@@ -149,7 +149,6 @@ jobs:
       - name: Infracost diff
         run: |
           infracost diff --path plan.json \
-                         --compare-to /tmp/infracost.json \
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
