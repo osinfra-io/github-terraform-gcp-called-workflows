@@ -26,15 +26,19 @@ Rather than copying and pasting from one workflow to another, you can make workf
 
 - [plan-and-apply.yml](.github/workflows/plan-and-apply.yml)
 
-### Example Google Cloud Platform Usage
+### Example Usage
 
 ```yaml
-name: Development
+name: Sandbox
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    paths-ignore:
+      - "**.md"
 
 # For reusable workflows, the permissions setting for id-token should be set to write at the
 # caller workflow level or in the specific job that calls the reusable workflow.
@@ -44,53 +48,22 @@ permissions:
 
 jobs:
   global_infra:
-    name: "Global"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
+    name: Global
+    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/plan-and-apply.yml@v0.0.0
     if: github.actor != 'dependabot[bot]'
     with:
       checkout_ref: ${{ github.ref }}
+      environment: sandbox
       github_environment: "Sandbox Infrastructure: Global"
-      service_account: "service-account@project-id.iam.gserviceaccount.com"
-      terraform_state_bucket: "terraform-state-bucket-sb"
+      service_account: example@example-project-sb.iam.gserviceaccount.com
+      terraform_plan_args: -var-file=tfvars/sandbox.tfvars
+      terraform_state_bucket: example-state-bucket-sb
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: global-sandbox
-      working_directory: global
-      workload_identity_provider: "projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc"
+      working_directory: test
+      workload_identity_provider: projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
-
-  us_east1_infra:
-    name: "Infra: us-east1"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
-    needs: global_infra
-    with:
-      checkout_ref: ${{ github.ref }}
-      github_environment: "Sandbox Infrastructure: us-east1"
-      service_account: "service-account@project-id.iam.gserviceaccount.com"
-      terraform_state_bucket: "terraform-state-bucket-sb"
-      terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      terraform_workspace: us-east1-sandbox
-      working_directory: regional
-      workload_identity_provider: "projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc"
-    secrets:
-      gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
-
-   us_east4_infra:
-    name: "Infra: us-east4"
-    uses: osinfra-io/github-terraform-called-workflows/.github/workflows/gcp-plan-and-apply.yml@v0.0.0
-    needs: global_infra
-    with:
-      checkout_ref: ${{ github.ref }}
-      github_environment: "Sandbox Infrastructure: us-east4"
-      service_account: "service-account@project-id.iam.gserviceaccount.com"
-      terraform_state_bucket: "terraform-state-bucket-sb"
-      terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      terraform_workspace: us-east4-sandbox
-      working_directory: regional
-      workload_identity_provider: "projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc"
-    secrets:
-      gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
       terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
 ```
