@@ -86,12 +86,17 @@ jobs:
         with:
           ref: main
 
+      - name: Get previous commit SHA
+        if: ${{ inputs.checkout_ref == 'refs/heads/main'}}
+        id: get_previous_commit
+        run: |
+          echo "::set-output name=sha::$(git rev-parse HEAD)"
+
       - name: Infracost checkout on main branch
         uses: actions/checkout@v3.5.0
         if: ${{ inputs.checkout_ref == 'refs/heads/main'}}
         with:
-          ref: ${{ github.ref.before }}
-
+          ref: ${{ steps.get_previous_commit.outputs.sha }}
 
       # Infracost - Setup Infracost
       # https://github.com/marketplace/actions/infracost-actions
