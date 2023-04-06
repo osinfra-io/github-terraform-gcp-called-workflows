@@ -91,7 +91,7 @@ jobs:
         working-directory: .
         id: get_previous_commit
         run: |
-          echo "::set-output name=sha::$(git rev-parse HEAD)"
+          echo "::set-output name=sha::$(git rev-parse main~1)"
 
       - name: Infracost checkout on main branch
         uses: actions/checkout@v3.5.0
