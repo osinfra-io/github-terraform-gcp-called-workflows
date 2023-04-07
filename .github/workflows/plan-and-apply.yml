@@ -94,6 +94,10 @@ jobs:
         with:
           ref: ${{ inputs.checkout_ref }}
 
+      - name: Test
+        run: |
+          echo "${{ github.event.before }}"
+
       # Google Cloud Platform - Authenticate to Google Cloud
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
