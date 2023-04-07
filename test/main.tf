@@ -15,3 +15,12 @@ module "test" {
 
   prefix = "testing"
 }
+
+module "bucket" {
+  source = "github.com/osinfra-io/terraform-google-storage-bucket"
+
+  force_destroy = true
+  location      = "US"
+  name          = "test-tf5t72-${var.environment}"
+  project       = module.test.project_id
+}
