@@ -25,8 +25,9 @@ Rather than copying and pasting from one workflow to another, you can make workf
 ### Workflows
 
 - [plan-and-apply.yml](.github/workflows/plan-and-apply.yml)
+- [kitchen-terraform.yml](.github/workflows/kitchen-terraform.yml)
 
-### Usage
+### Plan and Apply Usage
 
 You can check the [.github/workflows](.github/workflows/) directory for example configurations ([sandbox.yml](.github/workflows/sandbox.yml), [non-production.yml](.github/workflows/non-production.yml), [production.yml](.github/workflows/production.yml)). These set up the system for the testing process by providing it with all the necessary code to initialize it, thus creating good examples to base your configuration on.
 
@@ -70,4 +71,40 @@ jobs:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
       infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
       terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
+```
+
+### Kitchen-Terraform Usage
+
+Here is an example of a basic configuration:
+
+```yaml
+name: Kitchen Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    paths-ignore:
+      - "**.md"
+
+# For reusable workflows, the permissions setting for id-token should be set to write at the
+# caller workflow level or in the specific job that calls the reusable workflow.
+
+permissions:
+  id-token: write
+
+jobs:
+  kitchen_terraform:
+    name: "Kitchen-Terraform"
+    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/kitchen-terraform.yml@v0.0.0
+    if: github.actor != 'dependabot[bot]'
+
+    with:
+      service_account: example@example-project-sb.iam.gserviceaccount.com
+      workload_identity_provider: projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
+
+    secrets:
+      billing_account: ${{ secrets.BILLING_ACCOUNT }}
 ```
