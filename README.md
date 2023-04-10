@@ -86,6 +86,9 @@ on:
     types:
       - opened
       - synchronize
+  push:
+    branches:
+      - main
     paths-ignore:
       - "**.md"
 
