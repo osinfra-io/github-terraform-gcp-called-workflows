@@ -130,8 +130,7 @@ jobs:
 
       - name: Terraform workspace
         run: >-
-          terraform workspace select ${{ inputs.terraform_workspace }} ||
-          terraform workspace new ${{ inputs.terraform_workspace }}
+          terraform workspace select -or-create ${{ inputs.terraform_workspace }}
 
       - name: Terraform validate
         run: terraform validate
