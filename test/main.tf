@@ -1,9 +1,9 @@
 module "test" {
-  source = "github.com/osinfra-io/terraform-google-project"
+  source = "github.com/osinfra-io/terraform-google-project//global?ref=v0.1.2"
 
   billing_account                 = var.billing_account
-  cost_center                     = "x000"
   cis_2_2_logging_sink_project_id = var.cis_2_2_logging_sink_project_id
+  cost_center                     = "x000"
   description                     = "workflow"
   environment                     = var.environment
   folder_id                       = var.folder_id
@@ -17,7 +17,7 @@ module "test" {
 }
 
 module "bucket" {
-  source = "github.com/osinfra-io/terraform-google-storage-bucket"
+  source = "github.com/osinfra-io/terraform-google-storage-bucket?ref=v0.1.0"
 
   force_destroy = true
   location      = "US"

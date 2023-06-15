@@ -130,8 +130,7 @@ jobs:
 
       - name: Terraform workspace
         run: >-
-          terraform workspace select ${{ inputs.terraform_workspace }} ||
-          terraform workspace new ${{ inputs.terraform_workspace }}
+          terraform workspace select -or-create ${{ inputs.terraform_workspace }}
 
       - name: Terraform validate
         run: terraform validate
@@ -151,7 +150,8 @@ jobs:
 
       - name: Infracost diff
         run: |
-          infracost diff --path plan.json \
+          infracost diff --project-name "${{ inputs.github_environment }}" \
+                         --path plan.json \
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
@@ -164,10 +164,10 @@ jobs:
 
       - name: Terraform summary
         run: |
-          echo '🛠️ Terraform plan:' >> $GITHUB_STEP_SUMMARY
-          echo '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo '${{ steps.show.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo -e '🛠️ Terraform plan:' >> $GITHUB_STEP_SUMMARY
+          echo -e '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo -e '${{ steps.show.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          echo -e '```' >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
@@ -254,6 +254,6 @@ jobs:
 
       - name: Job summary
         run: |
-          echo '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo '${{ steps.apply.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo -e '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo -e '${{ steps.apply.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          echo -e '```' >> $GITHUB_STEP_SUMMARY
