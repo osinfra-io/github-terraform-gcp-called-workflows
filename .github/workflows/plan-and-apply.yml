@@ -163,10 +163,10 @@ jobs:
 
       - name: Terraform summary
         run: |
-          echo '🛠️ Terraform plan:' >> $GITHUB_STEP_SUMMARY
-          echo '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo '${{ steps.show.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo -e '🛠️ Terraform plan:' >> $GITHUB_STEP_SUMMARY
+          echo -e '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo -e '${{ steps.show.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          echo -e '```' >> $GITHUB_STEP_SUMMARY
 
       # Encrypt - Terraform plan.out
 
@@ -253,6 +253,6 @@ jobs:
 
       - name: Job summary
         run: |
-          echo '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo '${{ steps.apply.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo -e '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo -e '${{ steps.apply.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          echo -e '```' >> $GITHUB_STEP_SUMMARY
