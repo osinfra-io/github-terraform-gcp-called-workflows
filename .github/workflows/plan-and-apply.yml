@@ -150,7 +150,8 @@ jobs:
 
       - name: Infracost diff
         run: |
-          infracost diff --path plan.json \
+          infracost diff --project-name ${{ inputs.github_environment }} \
+                         --path plan.json \
                          --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
                          --usage-file infracost/${{ inputs.environment }}.yml \
                          --format json \
