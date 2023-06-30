@@ -65,6 +65,9 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
 
@@ -195,6 +198,9 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
+
+      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
