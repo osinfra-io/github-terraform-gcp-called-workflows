@@ -50,6 +50,7 @@ on:
 
 permissions:
   id-token: write
+  contents: read
 
 jobs:
   global_infra:
@@ -97,6 +98,7 @@ on:
 
 permissions:
   id-token: write
+  contents: read
 
 jobs:
   kitchen_terraform:

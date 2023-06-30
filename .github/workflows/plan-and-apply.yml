@@ -66,7 +66,10 @@ jobs:
 
     steps:
 
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+      # Uncomment to enable GitHub Security Lab Action Permissions Monitor
+
+      # - name: Actions permissions monitor
+      #   uses: GitHubSecurityLab/actions-permissions/monitor@v1.0.0
 
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
@@ -199,7 +202,10 @@ jobs:
 
     steps:
 
-      - uses: GitHubSecurityLab/actions-permissions/monitor@v1
+      # Uncomment to enable GitHub Security Lab Action Permissions Monitor
+
+      # - name: Actions permissions monitor
+      #   uses: GitHubSecurityLab/actions-permissions/monitor@v1.0.0
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
