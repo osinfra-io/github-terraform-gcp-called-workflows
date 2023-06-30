@@ -52,6 +52,7 @@ jobs:
           kitchen-command: converge
 
       # No support for WIF: https://github.com/inspec/inspec-gcp/issues/437
+
       # - name: Verify
       #   uses: osinfra-io/github-kitchen-terraform-action@v2.1.0
       #   with:

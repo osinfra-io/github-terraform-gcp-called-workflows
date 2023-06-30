@@ -11,7 +11,7 @@ on:
         required: true
         type: string
       count:
-        description: 'How previous runs to analyze'
+        description: 'Number of previous runs to analyze'
         required: false
         type: number
         default: 10
