@@ -1,4 +1,4 @@
-name: GitHub Security Lab Action Advisor
+name: Actions Permissions Advisor
 
 permissions:
   actions: read
@@ -11,16 +11,18 @@ on:
         required: true
         type: string
       count:
-        description: 'How many last runs to analyze'
+        description: 'Number of previous runs to analyze'
         required: false
         type: number
         default: 10
 
 jobs:
-  advisor:
+  action-permissions:
+    name: Action permissions
     runs-on: ubuntu-latest
     steps:
-    - uses: GitHubSecurityLab/actions-permissions/advisor@v1.0.0
+    - name: Advisor
+      uses: GitHubSecurityLab/actions-permissions/advisor@v1.0.0
       with:
         name: ${{ inputs.name }}
         count: ${{ inputs.count }}

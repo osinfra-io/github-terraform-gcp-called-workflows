@@ -21,6 +21,12 @@ jobs:
       BILLING_ACCOUNT: ${{ secrets.billing_account }}
 
     steps:
+
+      # Uncomment to enable GitHub Security Lab Action Permissions Monitor
+
+      # - name: Actions permissions monitor
+      #   uses: GitHubSecurityLab/actions-permissions/monitor@v1.0.0
+
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
@@ -46,6 +52,7 @@ jobs:
           kitchen-command: converge
 
       # No support for WIF: https://github.com/inspec/inspec-gcp/issues/437
+
       # - name: Verify
       #   uses: osinfra-io/github-kitchen-terraform-action@v2.1.0
       #   with:
