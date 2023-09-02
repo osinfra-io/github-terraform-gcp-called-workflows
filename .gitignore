@@ -25,3 +25,6 @@ plan.out
 *.gz
 *.tgz
 *.tar
+
+# Ignore .terraform.lock.hcl files
+.terraform.lock.hcl
