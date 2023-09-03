@@ -8,6 +8,9 @@
 *.tfstate
 *.tfstate.*
 
+# Ignore .terraform.lock.hcl files
+.terraform.lock.hcl
+
 # Crash log files
 crash.log
 
