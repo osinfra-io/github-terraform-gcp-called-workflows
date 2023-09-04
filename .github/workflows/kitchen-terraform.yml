@@ -12,6 +12,10 @@ on:
     secrets:
       billing_account:
         required: false
+      datadog_api_key:
+        required: false
+      datadog_app_key:
+        required: false
 
 jobs:
   kitchen_terraform:
@@ -19,6 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BILLING_ACCOUNT: ${{ secrets.billing_account }}
+      DATADOG_API_KEY: ${{ secrets.datadog_api_key }}
+      DATADOG_APP_KEY: ${{ secrets.datadog_app_key }}
 
     steps:
 
