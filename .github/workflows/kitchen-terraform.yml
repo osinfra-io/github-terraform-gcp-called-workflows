@@ -12,6 +12,10 @@ on:
     secrets:
       billing_account:
         required: false
+      datadog_api_key:
+        required: false
+      datadog_app_key:
+        required: false
 
 jobs:
   kitchen_terraform:
@@ -19,6 +23,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BILLING_ACCOUNT: ${{ secrets.billing_account }}
+      DATADOG_API_KEY: ${{ secrets.datadog_api_key }}
+      DATADOG_APP_KEY: ${{ secrets.datadog_app_key }}
 
     steps:
 
@@ -47,19 +53,19 @@ jobs:
       # https://github.com/marketplace/actions/kitchen-terraform-github-action
 
       - name: Converge
-        uses: osinfra-io/github-kitchen-terraform-action@v2.1.0
+        uses: osinfra-io/github-kitchen-terraform-action@v2.2.0
         with:
           kitchen-command: converge
 
       # No support for WIF: https://github.com/inspec/inspec-gcp/issues/437
 
       # - name: Verify
-      #   uses: osinfra-io/github-kitchen-terraform-action@v2.1.0
+      #   uses: osinfra-io/github-kitchen-terraform-action@v2.2.0
       #   with:
       #     kitchen-command: verify
 
       - name: Destroy
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: osinfra-io/github-kitchen-terraform-action@v2.1.0
+        uses: osinfra-io/github-kitchen-terraform-action@v2.2.0
         with:
           kitchen-command: destroy
