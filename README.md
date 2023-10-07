@@ -7,8 +7,7 @@
 Reusing workflows avoids duplication. This makes workflows easier to maintain and allows you to create new workflows
 more quickly by building on the work of others, just as you do with actions.
 
-Workflow reuse also promotes best practice by helping you to use workflows that are well designed, have already been
-tested, and have been proved to be effective. Your organization can build up a library of reusable workflows that can
+Workflow reuse also promotes best practices by helping you use well-designed, tested, and proven effective workflows. Your organization can build up a library of reusable workflows that can
 be centrally maintained.
 
 ## Reusing Workflows
@@ -29,7 +28,7 @@ Rather than copying and pasting from one workflow to another, you can make workf
 
 ### Plan and Apply Usage
 
-You can check the [.github/workflows](.github/workflows/) directory for example configurations ([sandbox.yml](.github/workflows/sandbox.yml), [non-production.yml](.github/workflows/non-production.yml), [production.yml](.github/workflows/production.yml)). These set up the system for the testing process by providing it with all the necessary code to initialize it, thus creating good examples to base your configuration on.
+You can check the [.github/workflows](.github/workflows/) directory for example configurations ([sandbox.yml](.github/workflows/sandbox.yml), [non-production.yml](.github/workflows/non-production.yml), [production.yml](.github/workflows/production.yml)). These set up the system for the testing process by providing all the necessary initial code, thus creating good examples to base your configuration on.
 
 Here is an example of a basic configuration:
 
@@ -46,7 +45,7 @@ on:
       - "**.md"
 
 # For reusable workflows, the permissions setting for id-token should be set to write at the
-# caller workflow level or in the specific job that calls the reusable workflow.
+# caller workflow level or the specific job that calls the reusable workflow.
 
 permissions:
   id-token: write
@@ -94,7 +93,7 @@ on:
       - "**.md"
 
 # For reusable workflows, the permissions setting for id-token should be set to write at the
-# caller workflow level or in the specific job that calls the reusable workflow.
+# caller workflow level or the specific job that calls the reusable workflow.
 
 permissions:
   id-token: write
