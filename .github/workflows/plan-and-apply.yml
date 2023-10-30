@@ -124,7 +124,7 @@ jobs:
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
 
       - name: Terraform setup
-        uses: hashicorp/setup-terraform@v2.0.3
+        uses: hashicorp/setup-terraform@v3.0.0
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
@@ -256,7 +256,7 @@ jobs:
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
 
       - name: Terraform setup
-        uses: hashicorp/setup-terraform@v2.0.3
+        uses: hashicorp/setup-terraform@v3.0.0
         with:
           terraform_version: ${{ inputs.terraform_version }}
 
