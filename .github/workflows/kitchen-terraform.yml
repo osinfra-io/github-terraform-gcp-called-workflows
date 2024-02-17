@@ -43,7 +43,7 @@ jobs:
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
       - name: Authenticate
-        uses: google-github-actions/auth@v2.0.1
+        uses: google-github-actions/auth@v2.1.1
         with:
           create_credentials_file: true
           service_account: ${{ inputs.service_account }}
@@ -53,19 +53,19 @@ jobs:
       # https://github.com/marketplace/actions/kitchen-terraform-github-action
 
       - name: Converge
-        uses: osinfra-io/github-kitchen-terraform-action@v2.3.3
+        uses: osinfra-io/github-kitchen-terraform-action@v2.4.0
         with:
           kitchen-command: converge
 
       # No support for WIF: https://github.com/inspec/inspec-gcp/issues/437
 
       # - name: Verify
-      #   uses: osinfra-io/github-kitchen-terraform-action@v2.3.3
+      #   uses: osinfra-io/github-kitchen-terraform-action@v2.4.0
       #   with:
       #     kitchen-command: verify
 
       - name: Destroy
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: osinfra-io/github-kitchen-terraform-action@v2.3.3
+        uses: osinfra-io/github-kitchen-terraform-action@v2.4.0
         with:
           kitchen-command: destroy
