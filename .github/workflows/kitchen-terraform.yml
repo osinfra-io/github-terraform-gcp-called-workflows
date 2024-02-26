@@ -43,7 +43,7 @@ jobs:
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
       - name: Authenticate
-        uses: google-github-actions/auth@v2.1.1
+        uses: google-github-actions/auth@v2.1.2
         with:
           create_credentials_file: true
           service_account: ${{ inputs.service_account }}
