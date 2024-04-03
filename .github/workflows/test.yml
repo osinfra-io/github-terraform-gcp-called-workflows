@@ -1,0 +1,92 @@
+name: Test Called Workflow
+
+on:
+  workflow_call:
+    inputs:
+      checkout_ref:
+        required: true
+        type: string
+      terraform_version:
+        required: true
+        type: string
+      working_directory:
+        required: false
+        type: string
+        default: test/default
+
+
+      # Uncomment if you have private modules
+
+      # ssh_key:
+      #   required: true
+
+# If you use private modules you'll need this env variable to use
+# the same ssh-agent socket value across all jobs & steps.
+
+# env:
+#  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+
+jobs:
+  test:
+    name: Terraform test
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+
+    steps:
+
+      # Uncomment to enable GitHub Security Lab Action Permissions Monitor
+
+      # - name: Actions permissions monitor
+      #   uses: GitHubSecurityLab/actions-permissions/monitor@v1.0.0
+
+      # GitHub - Checkout
+      # https://github.com/marketplace/actions/checkout
+
+      - name: Checkout
+        uses: actions/checkout@v4.1.2
+        with:
+          ref: ${{ inputs.checkout_ref }}
+
+      # GitHub - Setup SSH for private module access
+      # Uncomment if you have private modules
+
+      # - name: Private module access
+      #   run: |
+      #     ssh-agent -a $SSH_AUTH_SOCK
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
+      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      # HashiCorp - Setup Terraform
+      # https://github.com/marketplace/actions/hashicorp-setup-terraform
+
+      - name: Terraform setup
+        uses: hashicorp/setup-terraform@v3.0.0
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform format
+        run: terraform fmt -check -diff
+
+      - name: Terraform initialize
+        run: terraform init 
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform test
+        id: test
+        run: |
+          terraform test -verbose
+
+      - name: Terraform summary
+        run: |
+          echo -e '🎯 Terraform test:' >> $GITHUB_STEP_SUMMARY
+          echo -e '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo -e '${{ steps.test.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
+          echo -e '```' >> $GITHUB_STEP_SUMMARY
+
+
