@@ -12,7 +12,7 @@ on:
       working_directory:
         required: false
         type: string
-        default: test/default
+        default: fixtures/default
 
 
       # Uncomment if you have private modules
