@@ -95,7 +95,7 @@ jobs:
       - name: Terraform test
         id: test
         run: |
-          terraform test -verbose
+          terraform test -verbose -no-color
 
       - name: Terraform summary
         run: |
