@@ -24,7 +24,7 @@ Rather than copying and pasting from one workflow to another, you can make workf
 ### Workflows
 
 - [plan-and-apply.yml](.github/workflows/plan-and-apply.yml)
-- [kitchen-terraform.yml](.github/workflows/kitchen-terraform.yml)
+- [test.yml](.github/workflows/test.yml)
 
 ### Plan and Apply Usage
 
@@ -49,7 +49,6 @@ on:
 
 permissions:
   id-token: write
-  contents: read
 
 jobs:
   global_infra:
@@ -73,12 +72,12 @@ jobs:
       terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
 ```
 
-### Kitchen-Terraform Usage
+### Test Usage
 
 Here is an example of a basic configuration:
 
 ```yaml
-name: Kitchen Tests
+name: Terraform Tests
 
 on:
   workflow_dispatch:
@@ -86,29 +85,20 @@ on:
     types:
       - opened
       - synchronize
-  push:
-    branches:
-      - main
     paths-ignore:
       - "**.md"
 
-# For reusable workflows, the permissions setting for id-token should be set to write at the
-# caller workflow level or the specific job that calls the reusable workflow.
-
 permissions:
   id-token: write
-  contents: read
 
 jobs:
-  kitchen_terraform:
-    name: "Kitchen-Terraform"
-    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/kitchen-terraform.yml@v0.0.0
+  tests:
+    name: "Default"
+    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/test.yml@v0.0.0
     if: github.actor != 'dependabot[bot]'
 
     with:
       service_account: example@example-project-sb.iam.gserviceaccount.com
+      terraform_version: ${{ vars.TERRAFORM_VERSION }}
       workload_identity_provider: projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
-
-    secrets:
-      billing_account: ${{ secrets.BILLING_ACCOUNT }}
 ```
