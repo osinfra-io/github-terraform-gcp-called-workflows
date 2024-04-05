@@ -82,7 +82,7 @@ jobs:
         run: terraform fmt -check -diff
 
       - name: Terraform initialize
-        run: terraform init 
+        run: terraform init
 
       - name: Terraform validate
         run: terraform validate
@@ -98,5 +98,3 @@ jobs:
           echo -e '```hcl' >> $GITHUB_STEP_SUMMARY
           echo -e '${{ steps.test.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
           echo -e '```' >> $GITHUB_STEP_SUMMARY
-
-
