@@ -171,7 +171,7 @@ jobs:
       - name: Terraform summary
         run: |
           echo -e '🛠️ Terraform plan:' >> $GITHUB_STEP_SUMMARY
-          echo -e '```terraform' >> $GITHUB_STEP_SUMMARY
+          echo -e '```hcl' >> $GITHUB_STEP_SUMMARY
           echo -e '${{ steps.show.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
           echo -e '```' >> $GITHUB_STEP_SUMMARY
 
