@@ -88,6 +88,9 @@ on:
     paths-ignore:
       - "**.md"
 
+# For reusable workflows, the permissions setting for id-token should be set to write at the
+# caller workflow level or the specific job that calls the reusable workflow.
+
 permissions:
   id-token: write
 
