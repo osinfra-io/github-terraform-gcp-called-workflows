@@ -102,6 +102,10 @@ jobs:
 
     with:
       service_account: example@example-project-sb.iam.gserviceaccount.com
+      terraform_test_args: -var-file=test.tfvars
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       workload_identity_provider: projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
+
+    secrets:
+      terraform_test_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
 ```
