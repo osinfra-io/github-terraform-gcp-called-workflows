@@ -97,7 +97,7 @@ jobs:
       - name: Terraform test
         id: test
         run: |
-          terraform test -verbose -no-color ${{ inputs.terraform_test_args}} ${{ secrets.terraform_test_secret_args }}
+          terraform test -verbose -no-color terraform test -verbose -no-color ${inputs.terraform_test_args:+${inputs.terraform_test_args}} ${secrets.terraform_test_secret_args:+${secrets.terraform_test_secret_args}}
 
       - name: Terraform summary
         run: |
