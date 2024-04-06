@@ -6,6 +6,9 @@ on:
       service_account:
         required: true
         type: string
+      terraform_test_args:
+        required: false
+        type: string
       terraform_version:
         required: true
         type: string
@@ -21,6 +24,10 @@ on:
 
       # ssh_key:
       #   required: true
+   
+    secrets:
+      terraform_test_secret_args:
+        required: false
 
 # If you use private modules you'll need this env variable to use
 # the same ssh-agent socket value across all jobs & steps.
@@ -90,7 +97,7 @@ jobs:
       - name: Terraform test
         id: test
         run: |
-          terraform test -verbose -no-color
+          terraform test -verbose -no-color ${{ inputs.terraform_test_args}} ${{ secrets.terraform_test_secret_args }}
 
       - name: Terraform summary
         run: |
