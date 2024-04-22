@@ -15,7 +15,7 @@ on:
       working_directory:
         required: false
         type: string
-        default: fixtures/default
+        default: ./
       workload_identity_provider:
         required: true
         type: string
