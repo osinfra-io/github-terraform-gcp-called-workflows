@@ -24,7 +24,7 @@ on:
 
       # ssh_key:
       #   required: true
-   
+
     secrets:
       terraform_test_secret_args:
         required: false
