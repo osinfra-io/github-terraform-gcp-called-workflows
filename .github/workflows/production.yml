@@ -19,7 +19,7 @@ jobs:
   global:
     name: "Global"
     uses: ./.github/workflows/plan-and-apply.yml
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: github.event.workflow_run.conclusion == 'success'
     with:
       checkout_ref: ${{ github.ref }}
       environment: production
