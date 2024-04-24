@@ -17,6 +17,7 @@ jobs:
   global:
     name: Global
     uses: ./.github/workflows/plan-and-apply.yml
+    if: github.actor != 'osinfra-sa'
     with:
       checkout_ref: ${{ github.ref }}
       environment: non-production
