@@ -17,7 +17,7 @@ module "test" {
 }
 
 module "bucket" {
-  source = "github.com/osinfra-io/terraform-google-storage-bucket?ref=v0.1.0"
+  source = "github.com/osinfra-io/terraform-google-storage-bucket?ref=v0.1.2"
 
   force_destroy = true
 
