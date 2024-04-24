@@ -26,85 +26,13 @@ Rather than copying and pasting from one workflow to another, you can make workf
 - [plan-and-apply.yml](.github/workflows/plan-and-apply.yml)
 - [test.yml](.github/workflows/test.yml)
 
-### Plan and Apply Usage
+### Usage
 
-You can check the [.github/workflows](.github/workflows/) directory for example configurations ([sandbox.yml](.github/workflows/sandbox.yml), [non-production.yml](.github/workflows/non-production.yml), [production.yml](.github/workflows/production.yml)). These set up the system for the testing process by providing all the necessary initial code, thus creating good examples to base your configuration on.
+You can check the [.github/workflows](.github/workflows/) directory for example configurations:
 
-Here is an example of a basic configuration:
+- [sandbox.yml](.github/workflows/sandbox.yml)
+- [non-production.yml](.github/workflows/non-production.yml)
+- [production.yml](.github/workflows/production.yml)
+- [module-test.yml](.github/workflows/module-test.yml)
 
-```yaml
-name: Sandbox
-
-on:
-  workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-    paths-ignore:
-      - "**.md"
-
-# For reusable workflows, the permissions setting for id-token should be set to write at the
-# caller workflow level or the specific job that calls the reusable workflow.
-
-permissions:
-  id-token: write
-
-jobs:
-  global:
-    name: Global
-    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/plan-and-apply.yml@v0.0.0
-    if: github.actor != 'dependabot[bot]'
-    with:
-      checkout_ref: ${{ github.ref }}
-      environment: sandbox
-      github_environment: "Sandbox: Global"
-      service_account: example@example-project-sb.iam.gserviceaccount.com
-      terraform_plan_args: -var-file=tfvars/sandbox.tfvars
-      terraform_state_bucket: example-state-bucket-sb
-      terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      terraform_workspace: global-sandbox
-      working_directory: test
-      workload_identity_provider: projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
-    secrets:
-      gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
-      terraform_plan_secret_args: -var="secret_token=${{ secrets.SECRET_TOKEN }}"
-```
-
-### Test Usage
-
-Here is an example of a basic configuration:
-
-```yaml
-name: Terraform Tests
-
-on:
-  workflow_dispatch:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-    paths-ignore:
-      - "**.md"
-
-# For reusable workflows, the permissions setting for id-token should be set to write at the
-# caller workflow level or the specific job that calls the reusable workflow.
-
-permissions:
-  id-token: write
-
-jobs:
-  tests:
-    name: "Tests"
-    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/test.yml@v0.0.0
-    if: github.actor != 'dependabot[bot]'
-
-    with:
-      service_account: example@example-project-sb.iam.gserviceaccount.com
-      terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      workload_identity_provider: projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
-
-    secrets:
-      terraform_test_secret_args: -var="secret_token=${{ secrets.SECRET_TOKEN }}"
-```
+These set up the system for the testing process by providing all the necessary initial code, thus creating good examples to base your configuration on.

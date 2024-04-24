@@ -29,6 +29,10 @@ module "bucket" {
   }
 
   location = "US"
-  name     = "test-tf5t72-${var.environment}"
+  name     = "test-${random_id.test.hex}-${var.environment}"
   project  = module.test.project_id
+}
+
+resource "random_id" "test" {
+  byte_length = 4
 }
