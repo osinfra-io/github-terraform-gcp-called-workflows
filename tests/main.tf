@@ -1,19 +1,19 @@
 module "test" {
-  source = "github.com/osinfra-io/terraform-google-project//global?ref=v0.1.2"
+  source = "github.com/osinfra-io/terraform-google-project//global?ref=v0.2.1"
 
-  billing_account                 = var.billing_account
   cis_2_2_logging_sink_project_id = var.cis_2_2_logging_sink_project_id
-  cost_center                     = "x000"
   description                     = "workflow"
   environment                     = var.environment
   folder_id                       = var.folder_id
 
   labels = {
-    environment = var.environment
-    test        = "foo"
+    cost-center = "x000"
+    env         = var.environment
+    team        = "testing"
+    repository  = "github-terraform-gcp-called-workflows"
   }
 
-  prefix = "testing"
+  prefix = "test"
 }
 
 module "bucket" {

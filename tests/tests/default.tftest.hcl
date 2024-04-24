@@ -1,0 +1,3 @@
+run "default" {
+  command = plan
+}
