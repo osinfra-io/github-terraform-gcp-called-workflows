@@ -19,7 +19,7 @@ permissions:
 jobs:
   tests:
     name: Tests
-    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/test.yml@bug-fix
+    uses: ./.github/workflows/test.yml
     if: github.actor != 'dependabot[bot]'
     with:
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com

@@ -12,6 +12,6 @@ updates:
       interval: weekly
 
   - package-ecosystem: terraform
-    directory: tests
+    directory: tests/plan-and-apply
     schedule:
       interval: weekly
