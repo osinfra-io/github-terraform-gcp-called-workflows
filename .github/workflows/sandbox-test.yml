@@ -17,21 +17,12 @@ permissions:
   contents: read
 
 jobs:
-  global:
-    name: Global
-    uses: ./.github/workflows/plan-and-apply.yml
+  tests:
+    name: Tests
+    uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/test.yml@bug-fix
     if: github.actor != 'dependabot[bot]'
     with:
-      checkout_ref: ${{ github.ref }}
-      environment: sandbox
-      github_environment: "Sandbox: Global"
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com
-      terraform_plan_args: -var-file=tfvars/sandbox.tfvars
-      terraform_state_bucket: plt-lz-testing-2c8b-sb
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      terraform_workspace: global-sandbox
-      working_directory: tests/plan-and-apply
+      working_directory: tests/test
       workload_identity_provider: projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
-    secrets:
-      gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
