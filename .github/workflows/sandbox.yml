@@ -25,7 +25,7 @@ jobs:
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com
       terraform_test_args: -var-file=tfvars/sandbox.tfvars
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      working_directory: tests
+      working_directory: tests/test
       workload_identity_provider: projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
 
   global_infra:
@@ -41,7 +41,7 @@ jobs:
       terraform_state_bucket: plt-lz-testing-2c8b-sb
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: global-sandbox
-      working_directory: tests
+      working_directory: tests/plan-and-apply
       workload_identity_provider: projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}

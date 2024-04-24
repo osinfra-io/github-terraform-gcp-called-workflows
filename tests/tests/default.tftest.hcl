@@ -1,3 +1,0 @@
-run "default" {
-  command = plan
-}

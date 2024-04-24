@@ -26,7 +26,7 @@ jobs:
       terraform_state_bucket: plt-lz-testing-3bfe-nonprod
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: global-non-production
-      working_directory: tests
+      working_directory: tests/plan-and-apply
       workload_identity_provider: projects/992372365053/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
