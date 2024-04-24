@@ -27,14 +27,14 @@ jobs:
       working_directory: tests/test
       workload_identity_provider: projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
 
-  global_infra:
+  global:
     name: Global
     uses: ./.github/workflows/plan-and-apply.yml
     if: github.actor != 'dependabot[bot]'
     with:
       checkout_ref: ${{ github.ref }}
       environment: sandbox
-      github_environment: "Sandbox Infrastructure: Global"
+      github_environment: "Sandbox: Global"
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf91-sb.iam.gserviceaccount.com
       terraform_plan_args: -var-file=tfvars/sandbox.tfvars
       terraform_state_bucket: plt-lz-testing-2c8b-sb

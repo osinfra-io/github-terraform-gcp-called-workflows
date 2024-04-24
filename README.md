@@ -51,7 +51,7 @@ permissions:
   id-token: write
 
 jobs:
-  global_infra:
+  global:
     name: Global
     uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/plan-and-apply.yml@v0.0.0
     if: github.actor != 'dependabot[bot]'

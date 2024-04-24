@@ -14,13 +14,13 @@ permissions:
   contents: read
 
 jobs:
-  global_infra:
+  global:
     name: Global
     uses: ./.github/workflows/plan-and-apply.yml
     with:
       checkout_ref: ${{ github.ref }}
       environment: non-production
-      github_environment: "Non-Production Infrastructure: Global"
+      github_environment: "Non-Production: Global"
       service_account: plt-lz-testing-github@ptl-lz-terraform-tf05-nonprod.iam.gserviceaccount.com
       terraform_plan_args: -var-file=tfvars/non-production.tfvars
       terraform_state_bucket: plt-lz-testing-3bfe-nonprod
