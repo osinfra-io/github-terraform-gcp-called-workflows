@@ -27,8 +27,8 @@ module "bucket" {
     team        = "testing"
     repository  = "github-terraform-gcp-called-workflows"
   }
-  
-  location      = "US"
-  name          = "test-tf5t72-${var.environment}"
-  project       = module.test.project_id
+
+  location = "US"
+  name     = "test-tf5t72-${var.environment}"
+  project  = module.test.project_id
 }
