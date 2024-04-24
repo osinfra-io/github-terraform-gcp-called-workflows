@@ -51,14 +51,14 @@ permissions:
   id-token: write
 
 jobs:
-  global_infra:
+  global:
     name: Global
     uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/plan-and-apply.yml@v0.0.0
     if: github.actor != 'dependabot[bot]'
     with:
       checkout_ref: ${{ github.ref }}
       environment: sandbox
-      github_environment: "Sandbox Infrastructure: Global"
+      github_environment: "Sandbox: Global"
       service_account: example@example-project-sb.iam.gserviceaccount.com
       terraform_plan_args: -var-file=tfvars/sandbox.tfvars
       terraform_state_bucket: example-state-bucket-sb
@@ -69,7 +69,7 @@ jobs:
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
       infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}
-      terraform_plan_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
+      terraform_plan_secret_args: -var="secret_token=${{ secrets.SECRET_TOKEN }}"
 ```
 
 ### Test Usage
@@ -96,16 +96,15 @@ permissions:
 
 jobs:
   tests:
-    name: "Default"
+    name: "Tests"
     uses: osinfra-io/github-terraform-gcp-called-workflows/.github/workflows/test.yml@v0.0.0
     if: github.actor != 'dependabot[bot]'
 
     with:
       service_account: example@example-project-sb.iam.gserviceaccount.com
-      terraform_test_args: -var-file=test.tfvars
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       workload_identity_provider: projects/123456789876/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
 
     secrets:
-      terraform_test_secret_args: -var="billing_account=${{ secrets.BILLING_ACCOUNT }}"
+      terraform_test_secret_args: -var="secret_token=${{ secrets.SECRET_TOKEN }}"
 ```

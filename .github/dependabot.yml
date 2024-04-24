@@ -10,3 +10,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+
+  - package-ecosystem: terraform
+    directory: tests
+    schedule:
+      interval: weekly

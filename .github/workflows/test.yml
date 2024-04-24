@@ -15,7 +15,7 @@ on:
       working_directory:
         required: false
         type: string
-        default: ./
+        default: .
       workload_identity_provider:
         required: true
         type: string
@@ -24,12 +24,12 @@ on:
 
       # ssh_key:
       #   required: true
-   
+
     secrets:
       terraform_test_secret_args:
         required: false
 
-# If you use private modules you'll need this env variable to use
+# If you use private modules, you'll need this env variable to use
 # the same ssh-agent socket value across all jobs & steps.
 
 # env:
