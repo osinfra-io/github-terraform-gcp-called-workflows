@@ -1,5 +1,5 @@
 module "test" {
-  source = "github.com/osinfra-io/terraform-google-project//global?ref=v0.2.1"
+  source = "github.com/osinfra-io/terraform-google-project//global?ref=v0.2.2"
 
   cis_2_2_logging_sink_project_id = var.cis_2_2_logging_sink_project_id
   description                     = "workflow"
