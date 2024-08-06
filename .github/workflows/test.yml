@@ -9,6 +9,10 @@ on:
       terraform_test_args:
         required: false
         type: string
+      terraform_test_verbose:
+        required: false
+        type: boolean
+        default: false
       terraform_version:
         required: true
         type: string
@@ -97,7 +101,7 @@ jobs:
       - name: Terraform test
         id: test
         run: |
-          terraform test -verbose -no-color ${{ inputs.terraform_test_args}} ${{ secrets.terraform_test_secret_args }}
+          terraform test --verbose=${{ inputs.terraform_test_verbose }} -no-color ${{ inputs.terraform_test_args}} ${{ secrets.terraform_test_secret_args }}
 
       - name: Terraform summary
         run: |
