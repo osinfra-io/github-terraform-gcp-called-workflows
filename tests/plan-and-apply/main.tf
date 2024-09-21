@@ -1,7 +1,7 @@
 # Google Project Module (osinfra.io)
 # https://github.com/osinfra-io/terraform-google-project
 
-module "test" {
+module "project" {
   source = "github.com/osinfra-io/terraform-google-project?ref=v0.4.0"
 
   cis_2_2_logging_sink_project_id = var.cis_2_2_logging_sink_project_id
@@ -36,7 +36,7 @@ module "bucket" {
 
   location = "US"
   name     = "test-${random_id.test.hex}-${var.environment}"
-  project  = module.test.project_id
+  project  = module.project.id
 }
 
 resource "random_id" "test" {
