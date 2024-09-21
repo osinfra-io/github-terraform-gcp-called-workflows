@@ -185,6 +185,10 @@ jobs:
         if: steps.plan.outputs.exitcode == 2
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --symmetric --cipher-algo AES256 plan.out
 
+      - name: Delete cache
+        if: steps.plan.outputs.exitcode != 2
+        run: gh cache delete ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
+
     outputs:
       plan-exit-code: ${{ steps.plan.outputs.exitcode }}
 
