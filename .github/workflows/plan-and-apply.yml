@@ -188,6 +188,8 @@ jobs:
       - name: Delete cache
         if: steps.plan.outputs.exitcode != 2
         run: gh cache delete ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     outputs:
       plan-exit-code: ${{ steps.plan.outputs.exitcode }}
