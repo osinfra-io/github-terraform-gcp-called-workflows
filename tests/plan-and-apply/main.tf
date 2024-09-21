@@ -1,8 +1,8 @@
 # Google Project Module (osinfra.io)
 # https://github.com/osinfra-io/terraform-google-project
 
-module "test" {
-  source = "github.com/osinfra-io/terraform-google-project?ref=v0.3.1"
+module "project" {
+  source = "github.com/osinfra-io/terraform-google-project?ref=v0.4.0"
 
   cis_2_2_logging_sink_project_id = var.cis_2_2_logging_sink_project_id
   description                     = "workflow"
@@ -23,7 +23,7 @@ module "test" {
 # https://github.com/osinfra-io/terraform-google-storage-bucket
 
 module "bucket" {
-  source = "github.com/osinfra-io/terraform-google-storage-bucket?ref=v0.1.3"
+  source = "github.com/osinfra-io/terraform-google-storage-bucket?ref=v0.2.0"
 
   force_destroy = true
 
@@ -36,7 +36,7 @@ module "bucket" {
 
   location = "US"
   name     = "test-${random_id.test.hex}-${var.environment}"
-  project  = module.test.project_id
+  project  = module.project.id
 }
 
 resource "random_id" "test" {
