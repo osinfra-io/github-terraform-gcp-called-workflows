@@ -2,7 +2,7 @@
 # https://github.com/osinfra-io/terraform-google-project
 
 module "project" {
-  source = "github.com/osinfra-io/terraform-google-project?ref=v0.4.0"
+  source = "github.com/osinfra-io/terraform-google-project?ref=v0.4.1"
 
   cis_2_2_logging_sink_project_id = var.cis_2_2_logging_sink_project_id
   description                     = "workflow"
