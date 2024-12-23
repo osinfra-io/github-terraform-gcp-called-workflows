@@ -14,19 +14,19 @@ permissions:
   id-token: write
 
 jobs:
-  global:
-    name: Global
+  main:
+    name: Main
     uses: ./.github/workflows/plan-and-apply.yml
     if: github.actor != 'osinfra-sa'
     with:
       checkout_ref: ${{ github.ref }}
       environment: non-production
-      github_environment: "Non-Production: Global"
+      github_environment: "Non-Production: Main"
       service_account: plt-lz-testing-github@plt-lz-terraform-tfe2-nonprod.iam.gserviceaccount.com
       terraform_plan_args: -var-file=tfvars/non-production.tfvars
       terraform_state_bucket: plt-lz-testing-ae26-nonprod
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      terraform_workspace: global-non-production
+      terraform_workspace: main-non-production
       working_directory: tests/plan-and-apply
       workload_identity_provider: projects/992372365053/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
