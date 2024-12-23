@@ -12,8 +12,8 @@ on:
 # caller workflow level or in the specific job that calls the reusable workflow.
 
 permissions:
-  id-token: write
   contents: read
+  id-token: write
 
 jobs:
   main:
@@ -24,9 +24,9 @@ jobs:
       checkout_ref: ${{ github.ref }}
       environment: production
       github_environment: "Production: Main"
-      service_account: plt-lz-testing-github@ptl-lz-terraform-tf62-prod.iam.gserviceaccount.com
+      service_account: plt-lz-testing-github@plt-lz-terraform-tf56-prod.iam.gserviceaccount.com
       terraform_plan_args: -var-file=tfvars/production.tfvars
-      terraform_state_bucket: plt-lz-testing-e194-prod
+      terraform_state_bucket: plt-lz-testing-53a5-prod
       terraform_version: ${{ vars.TERRAFORM_VERSION }}
       terraform_workspace: main-production
       working_directory: tests/plan-and-apply
