@@ -269,6 +269,3 @@ jobs:
           echo -e '```terraform' >> $GITHUB_STEP_SUMMARY
           echo -e '${{ steps.apply.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
           echo -e '```' >> $GITHUB_STEP_SUMMARY
-
-      - name: Delete cache
-        run: gh cache delete ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}

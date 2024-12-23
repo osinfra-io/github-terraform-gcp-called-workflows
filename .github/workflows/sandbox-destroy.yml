@@ -7,8 +7,8 @@ on:
 # caller workflow level or in the specific job that calls the reusable workflow.
 
 permissions:
-  id-token: write
   contents: read
+  id-token: write
 
 jobs:
   main:
