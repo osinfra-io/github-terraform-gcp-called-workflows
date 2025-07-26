@@ -6,14 +6,14 @@ on:
       service_account:
         required: true
         type: string
-      terraform_test_args:
+      opentofu_test_args:
         required: false
         type: string
-      terraform_test_verbose:
+      opentofu_test_verbose:
         required: false
         type: boolean
         default: false
-      terraform_version:
+      opentofu_version:
         required: true
         type: string
       working_directory:
@@ -30,7 +30,7 @@ on:
       #   required: true
 
     secrets:
-      terraform_test_secret_args:
+      opentofu_test_secret_args:
         required: false
 
 # If you use private modules, you'll need this env variable to use
@@ -41,7 +41,7 @@ on:
 
 jobs:
   test:
-    name: Terraform test
+    name: OpenTofu test
     runs-on: ubuntu-latest
 
     defaults:
@@ -49,27 +49,11 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
-
-      # Uncomment to enable GitHub Security Lab Action Permissions Monitor
-
-      # - name: Actions permissions monitor
-      #   uses: GitHubSecurityLab/actions-permissions/monitor@v1.0.0
-
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
       - name: Checkout
-        uses: actions/checkout@v4.2.2
-
-      # Google Cloud Platform - Authenticate to Google Cloud
-      # https://github.com/marketplace/actions/authenticate-to-google-cloud
-
-      - name: Authenticate
-        uses: google-github-actions/auth@v2.1.11
-        with:
-          create_credentials_file: true
-          service_account: ${{ inputs.service_account }}
-          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       # GitHub - Setup SSH for private module access
       # Uncomment if you have private modules
@@ -81,31 +65,31 @@ jobs:
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      # HashiCorp - Setup Terraform
+      # HashiCorp - Setup OpenTofu
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
 
-      - name: Terraform setup
-        uses: hashicorp/setup-terraform@v3.1.2
+      - name: OpenTofu setup
+        uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          tofu_version: ${{ inputs.opentofu_version }}
 
-      - name: Terraform format
-        run: terraform fmt -check -diff
+      - name: OpenTofu format
+        run: tofu fmt -check -diff
 
-      - name: Terraform initialize
+      - name: OpenTofu initialize
         run: terraform init
 
-      - name: Terraform validate
+      - name: OpenTofu validate
         run: terraform validate
 
-      - name: Terraform test
+      - name: OpenTofu test
         id: test
         run: |
-          terraform test --verbose=${{ inputs.terraform_test_verbose }} -no-color ${{ inputs.terraform_test_args}} ${{ secrets.terraform_test_secret_args }}
+          terraform test --verbose=${{ inputs.opentofu_test_verbose }} -no-color ${{ inputs.opentofu_test_args}} ${{ secrets.opentofu_test_secret_args }}
 
-      - name: Terraform summary
+      - name: OpenTofu summary
         run: |
-          echo -e '🎯 Terraform test:' >> $GITHUB_STEP_SUMMARY
+          echo -e '🎯 OpenTofu test:' >> $GITHUB_STEP_SUMMARY
           echo -e '```hcl' >> $GITHUB_STEP_SUMMARY
           echo -e '${{ steps.test.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
           echo -e '```' >> $GITHUB_STEP_SUMMARY
