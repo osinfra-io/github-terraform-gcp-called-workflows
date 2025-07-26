@@ -74,15 +74,15 @@ jobs:
         run: tofu fmt -check -diff
 
       - name: OpenTofu initialize
-        run: terraform init
+        run: tofu init
 
       - name: OpenTofu validate
-        run: terraform validate
+        run: tofu validate
 
       - name: OpenTofu test
         id: test
         run: |
-          terraform test --verbose=${{ inputs.opentofu_test_verbose }} -no-color ${{ inputs.opentofu_test_args}} ${{ secrets.opentofu_test_secret_args }}
+          tofu test --verbose=${{ inputs.opentofu_test_verbose }} -no-color ${{ inputs.opentofu_test_args}} ${{ secrets.opentofu_test_secret_args }}
 
       - name: OpenTofu summary
         continue-on-error: true
