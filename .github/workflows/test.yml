@@ -87,9 +87,11 @@ jobs:
       - name: OpenTofu summary
         continue-on-error: true
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea
+        env:
+          TEST_STDOUT: ${{ steps.test.outputs.stdout }}
         with:
           script: |
-            const testResults = steps.test.outputs.stdout || 'No output available.';
+            const testResults = process.env.TEST_STDOUT || 'No output available.';
             core.summary
               .addHeading('🎯 OpenTofu test:')
               .addCodeBlock(testResults)
