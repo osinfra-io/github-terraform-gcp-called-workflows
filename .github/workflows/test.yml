@@ -1,5 +1,8 @@
 name: Test Called Workflow
 
+permissions:
+  contents: read
+
 on:
   workflow_call:
     inputs:
