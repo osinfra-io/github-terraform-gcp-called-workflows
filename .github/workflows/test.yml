@@ -38,7 +38,7 @@ on:
 
 jobs:
   test:
-    name: OpenTofu test
+    name: OpenTofu
     runs-on: ubuntu-latest
 
     defaults:
