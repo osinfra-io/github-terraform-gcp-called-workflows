@@ -93,6 +93,6 @@ jobs:
           script: |
             const testResults = process.env.TEST_STDOUT || 'No output available.';
             core.summary
-              .addHeading('🎯 OpenTofu test:')
+              .addHeading('🎯 OpenTofu Tests:')
               .addCodeBlock(testResults)
               .write();
