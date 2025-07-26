@@ -85,8 +85,12 @@ jobs:
           terraform test --verbose=${{ inputs.opentofu_test_verbose }} -no-color ${{ inputs.opentofu_test_args}} ${{ secrets.opentofu_test_secret_args }}
 
       - name: OpenTofu summary
-        run: |
-          echo -e '🎯 OpenTofu test:' >> $GITHUB_STEP_SUMMARY
-          echo -e '```hcl' >> $GITHUB_STEP_SUMMARY
-          echo -e '${{ steps.test.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
-          echo -e '```' >> $GITHUB_STEP_SUMMARY
+        continue-on-error: true
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea
+        with:
+          script: |
+            const testResults = steps.test.outputs.stdout || 'No output available.';
+            core.summary
+              .addHeading('🎯 OpenTofu test:')
+              .addCodeBlock(testResults)
+              .write();
