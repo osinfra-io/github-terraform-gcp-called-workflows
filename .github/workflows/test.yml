@@ -1,8 +1,5 @@
 name: Test Called Workflow
 
-permissions:
-  contents: read
-
 on:
   workflow_call:
     inputs:
@@ -32,6 +29,9 @@ on:
     secrets:
       opentofu_test_secret_args:
         required: false
+
+permissions:
+  contents: read
 
 # If you use private modules, you'll need this env variable to use
 # the same ssh-agent socket value across all jobs & steps.
