@@ -142,7 +142,7 @@ jobs:
           TEST_STDOUT: ${{ steps.show.outputs.stdout }}
         with:
           script: |
-            const testResults = process.${{ steps.show.outputs.stdout }} || 'No output available.';
+            const testResults = process.env.TEST_STDOUT || 'No output available.';
             core.summary
               .addCodeBlock(testResults, 'hcl')
               .write();
@@ -237,7 +237,7 @@ jobs:
           TEST_STDOUT: ${{ steps.apply.outputs.stdout }}
         with:
           script: |
-            const testResults = process.${{ steps.apply.outputs.stdout }} || 'No output available.';
+            const testResults = process.env.TEST_STDOUT || 'No output available.';
             core.summary
               .addCodeBlock(testResults, 'hcl')
               .write();
