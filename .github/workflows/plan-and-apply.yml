@@ -151,11 +151,15 @@ jobs:
             // Extract summary lines (add/change/destroy) from the plan output
             const summaryLines = (testResults.match(/^(Plan:.*|No changes\..*)$/gim) || []).join('\n') || 'No summary found.';
 
+            // Combine resource changes and summary in a single HCL code block
+            let combinedSummary = '';
+            if (changeLines) {
+              combinedSummary += '# Resource Changes\n' + changeLines + '\n\n';
+            }
+            combinedSummary += '# Plan Summary\n' + summaryLines;
+
             core.summary
-              .addRaw('<b>Resource Changes:</b><br/>\n')
-              .addRaw(changeLines ? `${changeLines}\n\n` : 'No resource changes found.\n\n')
-              .addRaw('<b>Summary:</b><br/>\n')
-              .addCodeBlock(summaryLines, 'hcl')
+              .addCodeBlock(combinedSummary, 'hcl')
               .addRaw('<details><summary>Show Full Plan Output</summary>\n\n')
               .addCodeBlock(testResults, 'hcl')
               .addRaw('\n</details>')
