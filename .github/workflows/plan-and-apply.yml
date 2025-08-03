@@ -147,10 +147,10 @@ jobs:
             const summaryLines = (testResults.match(/^(Plan:.*|No changes\..*)$/gim) || []).join('\n') || 'No summary found.';
             core.summary
               .addHeading('🛠️ OpenTofu Plan:')
-              .addRaw(`**Summary:**\n`)
+              .addRaw('<b>Summary:</b><br/>\n')
               .addCodeBlock(summaryLines)
               .addRaw('<details><summary>Show Full Plan Output</summary>\n\n')
-              .addCodeBlock(testResults)
+              .addCodeBlock(testResults, 'hcl')
               .addRaw('\n</details>')
               .write();
 
