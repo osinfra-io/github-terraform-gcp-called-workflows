@@ -6,9 +6,6 @@ on:
     branches:
       - main
 
-# For reusable workflows, the permissions setting for id-token should be set to write at the
-# caller workflow level or in the specific job that calls the reusable workflow.
-
 permissions:
   contents: read
   id-token: write
@@ -20,15 +17,13 @@ jobs:
     if: github.actor != 'osinfra-sa'
     with:
       checkout_ref: ${{ github.ref }}
-      environment: non-production
       github_environment: "Non-Production: Main"
       service_account: plt-lz-testing-github@plt-lz-terraform-tfe2-nonprod.iam.gserviceaccount.com
-      terraform_plan_args: -var-file=tfvars/non-production.tfvars
-      terraform_state_bucket: plt-lz-testing-ae26-nonprod
-      terraform_version: ${{ vars.TERRAFORM_VERSION }}
-      terraform_workspace: main-non-production
+      opentofu_plan_args: -var-file=tfvars/non-production.tfvars
+      opentofu_state_bucket: plt-lz-testing-ae26-nonprod
+      opentofu_version: ${{ vars.OPENTOFU_VERSION }}
+      opentofu_workspace: main-non-production
       working_directory: tests/plan-and-apply
       workload_identity_provider: projects/992372365053/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc
     secrets:
       gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      infracost_api_key: ${{ secrets.INFRACOST_API_KEY }}

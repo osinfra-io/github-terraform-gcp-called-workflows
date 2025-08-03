@@ -6,25 +6,22 @@ on:
       checkout_ref:
         required: true
         type: string
-      environment:
-        required: true
-        type: string
       github_environment:
         required: true
         type: string
       service_account:
         required: true
         type: string
-      terraform_version:
+      opentofu_version:
         required: true
         type: string
-      terraform_plan_args:
+      opentofu_plan_args:
         required: false
         type: string
-      terraform_state_bucket:
+      opentofu_state_bucket:
         required: true
         type: string
-      terraform_workspace:
+      opentofu_workspace:
         required: true
         type: string
       working_directory:
@@ -38,16 +35,18 @@ on:
     secrets:
       gpg_passphrase:
         required: true
-      infracost_api_key:
-        required: true
 
       # Uncomment if you have private modules
 
       # ssh_key:
       #   required: true
 
-      terraform_plan_secret_args:
+      opentofu_plan_secret_args:
         required: false
+
+permissions:
+  contents: read
+  id-token: write
 
 # If you use private modules you'll need this env variable to use
 # the same ssh-agent socket value across all jobs & steps.
@@ -57,7 +56,7 @@ on:
 
 jobs:
   plan:
-    name: Terraform plan
+    name: OpenTofu plan
     runs-on: ubuntu-latest
 
     defaults:
@@ -65,38 +64,24 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
-
-      # Uncomment to enable GitHub Security Lab Action Permissions Monitor
-
-      # - name: Actions permissions monitor
-      #   uses: GitHubSecurityLab/actions-permissions/monitor@v1.0.0
-
       # GitHub - Cache
       # https://github.com/marketplace/actions/cache
 
       - name: Setup cache
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684
         with:
           path: |
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-          key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ inputs.opentofu_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
-
-      # Infracost - Setup Infracost
-      # https://github.com/marketplace/actions/infracost-actions
-
-      - name: Infracost setup
-        uses: infracost/actions/setup@v3.0.1
-        with:
-          api-key: ${{ secrets.infracost_api_key }}
 
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           ref: ${{ inputs.checkout_ref }}
 
@@ -104,7 +89,7 @@ jobs:
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
       - name: Authenticate
-        uses: google-github-actions/auth@v2.1.12
+        uses: google-github-actions/auth@b7593ed2efd1c1617e1b0254da33b86225adb2a5
         with:
           create_credentials_file: true
           service_account: ${{ inputs.service_account }}
@@ -120,64 +105,52 @@ jobs:
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      # HashiCorp - Setup Terraform
-      # https://github.com/marketplace/actions/hashicorp-setup-terraform
+      # Setup OpenTofu
+      # https://github.com/marketplace/actions/opentofu-setup-tofu
 
-      - name: Terraform setup
-        uses: hashicorp/setup-terraform@v3.1.2
+      - name: OpenTofu setup
+        uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          tofu_version: ${{ inputs.opentofu_version }}
 
-      - name: Terraform format
-        run: terraform fmt -check -diff
+      - name: OpenTofu format
+        run: tofu fmt -check -diff
 
-      - name: Terraform initialize
-        run: terraform init -backend-config="bucket=${{ inputs.terraform_state_bucket }}"
+      - name: OpenTofu initialize
+        run: tofu init -backend-config="bucket=${{ inputs.opentofu_state_bucket }}"
 
-      - name: Terraform workspace
+      - name: OpenTofu workspace
         run: >-
-          terraform workspace select -or-create ${{ inputs.terraform_workspace }}
+          tofu workspace select -or-create ${{ inputs.opentofu_workspace }}
 
-      - name: Terraform validate
-        run: terraform validate
+      - name: OpenTofu validate
+        run: tofu validate
 
-      - name: Terraform plan
+      - name: OpenTofu plan
         id: plan
         run: |
-          terraform plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.terraform_plan_args}} ${{ secrets.terraform_plan_secret_args }}
+          tofu plan -detailed-exitcode -input=false -out=plan.out ${{ inputs.opentofu_plan_args}} ${{ secrets.opentofu_plan_secret_args }}
 
-      - name: Terraform json
-        run: |
-          terraform show -json plan.out > plan.json
-
-      - name: Terraform show
+      - name: OpenTofu show
         id: show
-        run: terraform show -no-color plan.out
+        run: tofu show -no-color plan.out
 
-      - name: Infracost diff
-        run: |
-          infracost diff --project-name "${{ inputs.github_environment }}" \
-                         --path plan.json \
-                         --terraform-var-file tfvars/${{ inputs.environment }}.tfvars \
-                         --usage-file infracost/${{ inputs.environment }}.yml \
-                         --format json \
-                         --out-file /tmp/infracost-diff.json
+      - name: OpenTofu summary
+        continue-on-error: true
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea
+        env:
+          TEST_STDOUT: ${{ steps.show.outputs.stdout }}
+        with:
+          script: |
+            const testResults = process.env.TEST_STDOUT || 'No output available.';
+            core.summary
+              .addHeading('🛠️ OpenTofu Plan:')
+              .addCodeBlock(testResults)
+              .write();
 
-      - name: Infracost summary
-        run: |
-          infracost output --path /tmp/infracost-diff.json \
-                           --format github-comment >> $GITHUB_STEP_SUMMARY
+      # Encrypt - OpenTofu plan.out
 
-      - name: Terraform summary
-        run: |
-          echo -e '🛠️ Terraform plan:' >> $GITHUB_STEP_SUMMARY
-          echo -e '```hcl' >> $GITHUB_STEP_SUMMARY
-          echo -e '${{ steps.show.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
-          echo -e '```' >> $GITHUB_STEP_SUMMARY
-
-      # Encrypt - Terraform plan.out
-
-      # If your plan includes any sort of sensitive data, even if obscured in Terraform's terminal output,
+      # If your plan includes any sort of sensitive data, even if obscured in OpenTofu's terminal output,
       # it will be saved in cleartext in the plan file. You should therefore treat any saved plan files as
       # potentially-sensitive artifacts.
 
@@ -189,7 +162,7 @@ jobs:
       plan-exit-code: ${{ steps.plan.outputs.exitcode }}
 
   apply:
-    name: Terraform apply
+    name: OpenTofu apply
     needs: plan
     if: needs.plan.outputs.plan-exit-code == 2
     runs-on: ubuntu-latest
@@ -201,17 +174,11 @@ jobs:
         working-directory: ${{ inputs.working_directory }}
 
     steps:
-
-      # Uncomment to enable GitHub Security Lab Action Permissions Monitor
-
-      # - name: Actions permissions monitor
-      #   uses: GitHubSecurityLab/actions-permissions/monitor@v1.0.0
-
       # GitHub - Checkout
       # https://github.com/marketplace/actions/checkout
 
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           ref: ${{ inputs.checkout_ref }}
 
@@ -219,7 +186,7 @@ jobs:
       # https://github.com/marketplace/actions/authenticate-to-google-cloud
 
       - name: Authenticate
-        uses: google-github-actions/auth@v2.1.12
+        uses: google-github-actions/auth@b7593ed2efd1c1617e1b0254da33b86225adb2a5
         with:
           create_credentials_file: true
           service_account: ${{ inputs.service_account }}
@@ -239,33 +206,40 @@ jobs:
       # https://github.com/marketplace/actions/cache
 
       - name: Restore cache
-        uses: actions/cache/restore@v4.2.3
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684
         with:
           path: |
             ${{ inputs.working_directory }}/.terraform
             ${{ inputs.working_directory }}/.terraform.lock.hcl
             ${{ inputs.working_directory }}/plan.out.gpg
-          key: ${{ inputs.terraform_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: ${{ inputs.opentofu_workspace }}-${{ github.run_id }}-${{ github.run_attempt }}
 
-      # Decrypt - Terraform plan.out
+      # Decrypt - OpenTofu plan.out
 
       - name: Decrypt
         run: gpg --quiet --batch --yes --passphrase ${{ secrets.gpg_passphrase }} --output plan.out plan.out.gpg
 
-      # HashiCorp - Setup Terraform
-      # https://github.com/marketplace/actions/hashicorp-setup-terraform
+      # Setup OpenTofu
+      # https://github.com/marketplace/actions/opentofu-setup-tofu
 
-      - name: Terraform setup
-        uses: hashicorp/setup-terraform@v3.1.2
+      - name: OpenTofu setup
+        uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
         with:
-          terraform_version: ${{ inputs.terraform_version }}
+          tofu_version: ${{ inputs.opentofu_version }}
 
-      - name: Terraform apply
+      - name: OpenTofu apply
         id: apply
-        run: terraform apply -no-color plan.out
+        run: tofu apply -no-color plan.out
 
-      - name: Job summary
-        run: |
-          echo -e '```terraform' >> $GITHUB_STEP_SUMMARY
-          echo -e '${{ steps.apply.outputs.stdout }}' >> $GITHUB_STEP_SUMMARY
-          echo -e '```' >> $GITHUB_STEP_SUMMARY
+      - name: OpenTofu summary
+        continue-on-error: true
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea
+        env:
+          TEST_STDOUT: ${{ steps.apply.outputs.stdout }}
+        with:
+          script: |
+            const testResults = process.env.TEST_STDOUT || 'No output available.';
+            core.summary
+              .addHeading('🔩 OpenTofu Apply:')
+              .addCodeBlock(testResults)
+              .write();
