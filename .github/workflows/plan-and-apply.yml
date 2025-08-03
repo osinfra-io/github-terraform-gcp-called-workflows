@@ -145,7 +145,7 @@ jobs:
             const testResults = process.env.TEST_STDOUT || 'No output available.';
             // Extract top-level resource changes (lines like: # ... will be ...)
             const changeLines = (testResults.match(/^\s*#\s+(.+? will be .*)$/gim) || [])
-              .map(line => `- ${line.replace(/^\s*#\s+/, '')}`)
+              .map(line => `${line.replace(/^\s*#\s+/, '')}`)
               .join('\n');
 
             // Extract summary lines (add/change/destroy) from the plan output
@@ -154,9 +154,9 @@ jobs:
             // Combine resource changes and summary in a single HCL code block
             let combinedSummary = '';
             if (changeLines) {
-              combinedSummary += '# Resource Changes\n' + changeLines + '\n\n';
+              combinedSummary += changeLines + '\n\n';
             }
-            combinedSummary += '# Plan Summary\n' + summaryLines;
+            combinedSummary += summaryLines;
 
             core.summary
               .addCodeBlock(combinedSummary, 'hcl')
