@@ -143,9 +143,15 @@ jobs:
         with:
           script: |
             const testResults = process.env.TEST_STDOUT || 'No output available.';
+            // Extract summary lines (add/change/destroy) from the plan output
+            const summaryLines = (testResults.match(/(Plan:.*\n|No changes.*/gi) || []).join('') || 'No summary found.');
             core.summary
               .addHeading('🛠️ OpenTofu Plan:')
+              .addRaw(`**Summary:**\n`)
+              .addCodeBlock(summaryLines)
+              .addRaw('<details><summary>Show Full Plan Output</summary>\n\n')
               .addCodeBlock(testResults)
+              .addRaw('\n</details>')
               .write();
 
       # Encrypt - OpenTofu plan.out
