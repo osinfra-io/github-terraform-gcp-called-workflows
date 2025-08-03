@@ -1,11 +1,11 @@
-# Terraform Core Helpers Module (osinfra.io)
-# https://github.com/osinfra-io/terraform-core-helpers
+# OpenTofu Core Helpers Module (osinfra.io)
+# https://github.com/osinfra-io/opentofu-core-helpers
 
 module "helpers" {
-  source = "github.com/osinfra-io/terraform-core-helpers//root?ref=v0.1.2"
+  source = "github.com/osinfra-io/opentofu-core-helpers//root?ref=bf324af8c32babb9cb27ac194caefe3f36ce3f30"
 
   cost_center         = "x001"
   data_classification = "public"
-  repository          = "github-terraform-gcp-called-workflows"
+  repository          = "github-opentofu-gcp-called-workflows"
   team                = "testing"
 }

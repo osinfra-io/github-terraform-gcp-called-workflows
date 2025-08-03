@@ -9,9 +9,6 @@ on:
     paths-ignore:
       - "**.md"
 
-# For reusable workflows, the permissions setting for id-token should be set to write at the
-# caller workflow level or in the specific job that calls the reusable workflow.
-
 permissions:
   contents: read
   id-token: write
@@ -22,7 +19,5 @@ jobs:
     uses: ./.github/workflows/test.yml
     if: github.actor != 'dependabot[bot]'
     with:
-      service_account: plt-lz-testing-github@plt-lz-terraform-tf00-sb.iam.gserviceaccount.com
-      terraform_version: ${{ vars.TERRAFORM_VERSION }}
+      opentofu_version: ${{ vars.OPENTOFU_VERSION }}
       working_directory: tests/test
-      workload_identity_provider: projects/746490462722/locations/global/workloadIdentityPools/github-actions/providers/github-actions-oidc

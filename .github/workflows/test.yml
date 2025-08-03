@@ -62,8 +62,8 @@ jobs:
       #     echo "${{ secrets.ssh_key }}" | tr -d '\r' | ssh-add -
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-      # HashiCorp - Setup OpenTofu
-      # https://github.com/marketplace/actions/hashicorp-setup-terraform
+      # Setup OpenTofu
+      # https://github.com/marketplace/actions/opentofu-setup-tofu
 
       - name: OpenTofu setup
         uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
@@ -93,6 +93,5 @@ jobs:
           script: |
             const testResults = process.env.TEST_STDOUT || 'No output available.';
             core.summary
-              .addHeading('🎯 OpenTofu Tests:')
-              .addCodeBlock(testResults)
+              .addCodeBlock(testResults, 'hcl')
               .write();
