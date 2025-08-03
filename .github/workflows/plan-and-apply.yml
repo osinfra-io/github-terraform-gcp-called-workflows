@@ -144,7 +144,7 @@ jobs:
           script: |
             const testResults = process.env.TEST_STDOUT || 'No output available.';
             // Extract summary lines (add/change/destroy) from the plan output
-            const summaryLines = (testResults.match(/(Plan:.*\n|No changes.*/gi) || []).join('') || 'No summary found.');
+            const summaryLines = (testResults.match(/^(Plan:.*|No changes\..*)$/gim) || []).join('\n') || 'No summary found.';
             core.summary
               .addHeading('🛠️ OpenTofu Plan:')
               .addRaw(`**Summary:**\n`)
